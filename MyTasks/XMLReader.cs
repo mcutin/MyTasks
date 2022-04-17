@@ -14,6 +14,7 @@ namespace MyTasks
         // Fields
         private string file;
         private XElement content;
+        private DateTime oldestDate;
         private int taskCount;
         private int taskLowCount;
         private int taskHighCount;
@@ -52,16 +53,19 @@ namespace MyTasks
             }
         }
 
+        public DateTime OldestDate
+        {
+            get
+            {
+                return oldestDate;
+            }
+        }
+
         public int TaskCount
         {
             get
             {
                 return taskCount;
-            }
-
-            set
-            {
-                taskCount = value;
             }
         }
 
@@ -71,11 +75,6 @@ namespace MyTasks
             {
                 return taskLowCount;
             }
-
-            set
-            {
-                taskLowCount = value;
-            }
         }
 
         public int TaskHighCount
@@ -84,11 +83,6 @@ namespace MyTasks
             {
                 return taskHighCount;
             }
-
-            set
-            {
-                taskHighCount = value;
-            }
         }
 
         public int TaskNormalCount
@@ -96,11 +90,6 @@ namespace MyTasks
             get
             {
                 return taskNormalCount;
-            }
-
-            set
-            {
-                taskNormalCount = value;
             }
         }
 
@@ -157,15 +146,32 @@ namespace MyTasks
             }
         }
 
+        private DateTime OldestTask()
+        {
+            // Returns the oldest task date
+            DateTime oldest = DateTime.MaxValue;
+            foreach (var task in this.Content.Elements())
+            {
+                DateTime taskDate = DateTime.ParseExact(task.Element("dueDate").Value, 
+                    "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                if (oldest > taskDate)
+                {
+                    oldest = taskDate;
+                }
+            }
+            return oldest;
+        }
+
         public bool Open()
         {
             try
             {
                 this.Content = XElement.Load(this.File);
-                this.TaskCount = UpdateTaskCount();
-                this.TaskHighCount = PriorityTaskCount(2);
-                this.TaskLowCount = PriorityTaskCount(0);
-                this.TaskNormalCount = PriorityTaskCount(1);
+                this.oldestDate = OldestTask();
+                this.taskCount = UpdateTaskCount();
+                this.taskHighCount = PriorityTaskCount(2);
+                this.taskLowCount = PriorityTaskCount(0);
+                this.taskNormalCount = PriorityTaskCount(1);
             }
             catch (FileNotFoundException e)
             {

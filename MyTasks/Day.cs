@@ -6,18 +6,28 @@ using System.Threading.Tasks;
 
 namespace MyTasks
 {
-    internal class Day
+    public class Day
     {
 		// Fields
 		private DateTime dayDate = DateTime.Today;
+        private bool enabled;
 		private int highTasks;
 		private int normalTasks;
 		private int lowTasks;
-	
-        // Constructor
-		public Day(DateTime date, int Low = 0, int Normal = 0, int High = 0)
+
+        // Constructors
+        public Day()
+        {
+            this.dayDate = DateTime.Today;
+            this.enabled = true;
+            this.lowTasks = 0;
+            this.normalTasks = 0;
+            this.highTasks = 0;
+        }
+        public Day(DateTime date, bool Enabled = true, int Low = 0, int Normal = 0, int High = 0)
         {
             this.dayDate = date;
+            this.enabled = Enabled;
             this.LowTasks = Low;
             this.NormalTasks = Normal;
             this.HighTasks = High;
@@ -33,6 +43,19 @@ namespace MyTasks
             set
             {
                 dayDate = value;
+            }
+        }
+
+        public bool Enabled
+        {
+            get
+            {
+                return enabled;
+            }
+
+            set
+            {
+                enabled = value;
             }
         }
 

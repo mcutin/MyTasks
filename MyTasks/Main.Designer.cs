@@ -46,7 +46,7 @@
             this.lblSunday = new System.Windows.Forms.Label();
             this.rtfDay57 = new System.Windows.Forms.RichTextBox();
             this.rtfDay47 = new System.Windows.Forms.RichTextBox();
-            this.rtfDay73 = new System.Windows.Forms.RichTextBox();
+            this.rtfDay37 = new System.Windows.Forms.RichTextBox();
             this.rtfDay56 = new System.Windows.Forms.RichTextBox();
             this.rtfDay46 = new System.Windows.Forms.RichTextBox();
             this.rtfDay36 = new System.Windows.Forms.RichTextBox();
@@ -188,7 +188,7 @@
             this.groupShortTermPlan.Controls.Add(this.lblSunday);
             this.groupShortTermPlan.Controls.Add(this.rtfDay57);
             this.groupShortTermPlan.Controls.Add(this.rtfDay47);
-            this.groupShortTermPlan.Controls.Add(this.rtfDay73);
+            this.groupShortTermPlan.Controls.Add(this.rtfDay37);
             this.groupShortTermPlan.Controls.Add(this.rtfDay56);
             this.groupShortTermPlan.Controls.Add(this.rtfDay46);
             this.groupShortTermPlan.Controls.Add(this.rtfDay36);
@@ -332,18 +332,18 @@
             this.rtfDay47.TabIndex = 33;
             this.rtfDay47.Text = "";
             // 
-            // rtfDay73
+            // rtfDay37
             // 
-            this.rtfDay73.BackColor = System.Drawing.Color.White;
-            this.rtfDay73.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.rtfDay73.Cursor = System.Windows.Forms.Cursors.Default;
-            this.rtfDay73.Location = new System.Drawing.Point(495, 245);
-            this.rtfDay73.Name = "rtfDay73";
-            this.rtfDay73.ReadOnly = true;
-            this.rtfDay73.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.rtfDay73.Size = new System.Drawing.Size(80, 90);
-            this.rtfDay73.TabIndex = 32;
-            this.rtfDay73.Text = "";
+            this.rtfDay37.BackColor = System.Drawing.Color.White;
+            this.rtfDay37.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.rtfDay37.Cursor = System.Windows.Forms.Cursors.Default;
+            this.rtfDay37.Location = new System.Drawing.Point(495, 245);
+            this.rtfDay37.Name = "rtfDay37";
+            this.rtfDay37.ReadOnly = true;
+            this.rtfDay37.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.rtfDay37.Size = new System.Drawing.Size(80, 90);
+            this.rtfDay37.TabIndex = 32;
+            this.rtfDay37.Text = "";
             // 
             // rtfDay56
             // 
@@ -855,7 +855,7 @@
         private System.Windows.Forms.RichTextBox rtfDay23;
         private System.Windows.Forms.RichTextBox rtfDay57;
         private System.Windows.Forms.RichTextBox rtfDay47;
-        private System.Windows.Forms.RichTextBox rtfDay73;
+        private System.Windows.Forms.RichTextBox rtfDay37;
         private System.Windows.Forms.RichTextBox rtfDay56;
         private System.Windows.Forms.RichTextBox rtfDay46;
         private System.Windows.Forms.RichTextBox rtfDay36;

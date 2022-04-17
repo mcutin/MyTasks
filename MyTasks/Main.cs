@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,7 +33,8 @@ namespace MyTasks
             tasks.Open();
             UpdateStatusBar();
             FormatTaskList();
-            UpdateTaskList();            
+            UpdateTaskList();
+            UpdateShortTermPlan();
         }
 
         private void FormatTaskList()
@@ -87,15 +89,198 @@ namespace MyTasks
 
         public void UpdateShortTermPlan()
         {
-            // To be implemented
+            // Initilalize short plan array
+            Day[,] shortTerm = new Day[5, 7];
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 7; j++)
+                {
+                    shortTerm[i, j] = new Day();
+                }
+            }
+
+            // Current moth is based on oldest task
+            // Check day of the week of oldest task due date
+            DayOfWeek dow = tasks.OldestDate.DayOfWeek;
+
+            switch (dow)
+            {
+                case DayOfWeek.Monday:
+                    shortTerm[0, 0].Enabled = false;
+                    shortTerm[0, 1].Enabled = true;
+                    shortTerm[0, 2].Enabled = true;
+                    shortTerm[0, 3].Enabled = true;
+                    shortTerm[0, 4].Enabled = true;
+                    shortTerm[0, 5].Enabled = true;
+                    shortTerm[0, 6].Enabled = true;
+                    break;
+                case DayOfWeek.Tuesday:
+                    shortTerm[0, 0].Enabled = false;
+                    shortTerm[0, 1].Enabled = false;
+                    shortTerm[0, 2].Enabled = true;
+                    shortTerm[0, 3].Enabled = true;
+                    shortTerm[0, 4].Enabled = true;
+                    shortTerm[0, 5].Enabled = true;
+                    shortTerm[0, 6].Enabled = true;
+                    break;
+                case DayOfWeek.Wednesday:
+                    shortTerm[0, 0].Enabled = false;
+                    shortTerm[0, 1].Enabled = false;
+                    shortTerm[0, 2].Enabled = false;
+                    shortTerm[0, 3].Enabled = true;
+                    shortTerm[0, 4].Enabled = true;
+                    shortTerm[0, 5].Enabled = true;
+                    shortTerm[0, 6].Enabled = true;
+                    break;
+                case DayOfWeek.Thursday:
+                    shortTerm[0, 0].Enabled = false;
+                    shortTerm[0, 1].Enabled = false;
+                    shortTerm[0, 2].Enabled = false;
+                    shortTerm[0, 3].Enabled = false;
+                    shortTerm[0, 4].Enabled = true;
+                    shortTerm[0, 5].Enabled = true;
+                    shortTerm[0, 6].Enabled = true;
+                    break;
+                case DayOfWeek.Friday:
+                    shortTerm[0, 0].Enabled = false;
+                    shortTerm[0, 1].Enabled = false;
+                    shortTerm[0, 2].Enabled = false;
+                    shortTerm[0, 3].Enabled = false;
+                    shortTerm[0, 4].Enabled = false;
+                    shortTerm[0, 5].Enabled = true;
+                    shortTerm[0, 6].Enabled = true;
+                    break;
+                case DayOfWeek.Saturday:
+                    shortTerm[0, 0].Enabled = false;
+                    shortTerm[0, 1].Enabled = false;
+                    shortTerm[0, 2].Enabled = false;
+                    shortTerm[0, 3].Enabled = false;
+                    shortTerm[0, 4].Enabled = false;
+                    shortTerm[0, 5].Enabled = false;
+                    shortTerm[0, 6].Enabled = true;
+                    break;
+                default:
+                    shortTerm[0, 0].Enabled = true;
+                    shortTerm[0, 1].Enabled = true;
+                    shortTerm[0, 2].Enabled = true;
+                    shortTerm[0, 3].Enabled = true;
+                    shortTerm[0, 4].Enabled = true;
+                    shortTerm[0, 5].Enabled = true;
+                    shortTerm[0, 6].Enabled = true;
+                    break;
+            }
+
+            // Fill in all the data for each Day in short term plan
+            DateTime date = tasks.OldestDate;
+
+            for (int row = 0; row <= 4; row++)
+            {
+                for (int col = 0; col <= 6; col++)
+                {
+                    if (shortTerm[row, col].Enabled)
+                    {
+                        // Fill in date of day
+                        shortTerm[row, col].DayDate = date;
+
+                        // Fill in tasks per priority
+                        // Low
+                        IEnumerable<XElement> lp = from t in tasks.Content.Elements("task")
+                                                   where t.Element("dueDate").ToString() == date.ToString("dd/MM/yyyy")
+                                                   && (int)t.Element("priority") == 0
+                                                   select t;
+                        shortTerm[row, col].LowTasks = lp.Count();
+                        // Normal
+                        IEnumerable<XElement> np = from t in tasks.Content.Elements("task")
+                                                   where t.Element("dueDate").ToString() == date.ToString("dd/MM/yyyy")
+                                                   && (int)t.Element("priority") == 1
+                                                   select t;
+                        shortTerm[row, col].NormalTasks = np.Count();
+                        // High
+                        IEnumerable<XElement> hp = from t in tasks.Content.Elements("task")
+                                                   where t.Element("dueDate").ToString() == date.ToString("dd/MM/yyyy")
+                                                   && (int)t.Element("priority") == 2
+                                                   select t;
+                        shortTerm[row, col].HighTasks = hp.Count();
+
+                        // Increment date
+                        date = date.AddDays(1);
+                    }
+                }
+            }
+            UpdateDay(rtfDay11, shortTerm);
+            UpdateDay(rtfDay12, shortTerm);
+            UpdateDay(rtfDay13, shortTerm);
+            UpdateDay(rtfDay14, shortTerm);
+            UpdateDay(rtfDay15, shortTerm);
+            UpdateDay(rtfDay16, shortTerm);
+            UpdateDay(rtfDay17, shortTerm);
+            UpdateDay(rtfDay21, shortTerm);
+            UpdateDay(rtfDay22, shortTerm);
+            UpdateDay(rtfDay23, shortTerm);
+            UpdateDay(rtfDay24, shortTerm);
+            UpdateDay(rtfDay25, shortTerm);
+            UpdateDay(rtfDay26, shortTerm);
+            UpdateDay(rtfDay27, shortTerm);
+            UpdateDay(rtfDay31, shortTerm);
+            UpdateDay(rtfDay32, shortTerm);
+            UpdateDay(rtfDay33, shortTerm);
+            UpdateDay(rtfDay34, shortTerm);
+            UpdateDay(rtfDay35, shortTerm);
+            UpdateDay(rtfDay36, shortTerm);
+            UpdateDay(rtfDay37, shortTerm);
+            UpdateDay(rtfDay41, shortTerm);
+            UpdateDay(rtfDay42, shortTerm);
+            UpdateDay(rtfDay43, shortTerm);
+            UpdateDay(rtfDay44, shortTerm);
+            UpdateDay(rtfDay45, shortTerm);
+            UpdateDay(rtfDay46, shortTerm);
+            UpdateDay(rtfDay47, shortTerm);
+            UpdateDay(rtfDay51, shortTerm);
+            UpdateDay(rtfDay52, shortTerm);
+            UpdateDay(rtfDay53, shortTerm);
+            UpdateDay(rtfDay54, shortTerm);
+            UpdateDay(rtfDay55, shortTerm);
+            UpdateDay(rtfDay56, shortTerm);
+            UpdateDay(rtfDay57, shortTerm);
+
+            // Update groupShortTermPlan Text property
+            string month = tasks.OldestDate.ToString("MMMM",new CultureInfo("en-US"));
+            groupShortTermPlan.Text = "Short term plan - " + month;
         }
 
-        public void UpdateDay(RichTextBox day, DateTime date)
+        public void UpdateDay(RichTextBox day, Day[,] shortTerm)
         {
-            Int32.TryParse(day.Name.Substring(Name.Length - 1), out int dayOfWeek);
-            Int32.TryParse(day.Name.Substring(Name.Length - 2, 1), out int week);
+            Int32.TryParse(day.Name.Substring(day.Name.Length - 1, 1), out int d);
+            Int32.TryParse(day.Name.Substring(day.Name.Length - 2, 1), out int w);
+            d--;
+            w--;
 
-            shortPlanMonth[week, dayOfWeek].DayDate = date;
+            if (shortTerm[w, d].Enabled)
+            {
+                // Reflect new data on each rtfDay object
+                day.AppendText(shortTerm[w, d].DayDate.Day.ToString(), Color.Black,
+                    FontStyle.Bold, HorizontalAlignment.Right);
+                if (shortTerm[w, d].HighTasks > 0)
+                {
+                    day.AppendText(shortTerm[w, d].HighTasks.ToString(), Color.Red);
+                }
+                else
+                {
+                    day.AppendText(Environment.NewLine);
+                }
+                if (shortTerm[w, d].NormalTasks > 0)
+                {
+                    day.AppendText(shortTerm[w, d].NormalTasks.ToString(), Color.Green);
+                }
+                else
+                {
+                    day.AppendText(Environment.NewLine);
+                }
+                if (shortTerm[w, d].LowTasks > 0)
+                {
+                    day.AppendText(shortTerm[w, d].LowTasks.ToString(), Color.Blue);
+                }
+            }
         }
 
         private void dgvTasks_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -113,6 +298,7 @@ namespace MyTasks
             UpdateStatusBar();
             FormatTaskList();
             UpdateTaskList();
+            UpdateShortTermPlan();
         }
 
         private void Main_Load(object sender, EventArgs e)

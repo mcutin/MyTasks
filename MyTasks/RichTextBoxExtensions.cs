@@ -18,7 +18,7 @@ namespace MyTasks
         /// <param name="color">Color to format <c>text</c>.</param>
         /// <param name="style">Text style to be applied. It can be <c>Regular</c>, <c>Bold</c>, <c>Italic</c>, <c>Underline</c> or <c>Strikeout</c>.</param>
         /// <param name="addNewLine">if <c>true</c>, <c>text</c> will be appended to <c>box</c> Text property with a new line character in the end.</param>
-        public static void AppendText(this RichTextBox box, string text, Color color, FontStyle style, HorizontalAlignment alignment = HorizontalAlignment.Left, bool addNewLine = false)
+        public static void AppendText(this RichTextBox box, string text, Color color, FontStyle style = FontStyle.Regular, HorizontalAlignment alignment = HorizontalAlignment.Left, bool addNewLine = true)
         {
             // Define append position as the first character
             // after the last one in box.Text property
