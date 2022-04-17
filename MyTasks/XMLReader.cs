@@ -169,8 +169,8 @@ namespace MyTasks
             }
             catch (FileNotFoundException e)
             {
-                MessageBox.Show("File not found: " + e.FileName + "\nSystem message: " + e.Message,
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("File not found: " + e.FileName, "Error", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             catch (IOException e)
@@ -181,49 +181,37 @@ namespace MyTasks
             }
             return true;
         }
+
+        public void Update()
+        {
+            // Updates XMLReader Content to ensure any changes in the
+            // XML file are reflected in memory content
+            this.Content.RemoveAll();
+            this.Open();
+        }
+
+        public int FirstFreeID()
+        {
+            // Returns the first free ID in the XML file
+            // This free ID can be assigned to a new task
+            
+            int freeID = 1;
+            bool idFound = true;
+            do
+            {
+                IEnumerable<XElement> ids = from t in this.Content.Descendants("task")
+                                            where (int)t.Element("id") == freeID
+                                            select t;
+                if (ids.Count() != 0)
+                {
+                    freeID++;
+                }
+                else
+                {
+                    idFound = false;
+                }
+            } while (idFound);
+            return freeID;
+        }
     }
 }
-
-//   class XML_Reader
-//    {
-//        public string DHI_type;
-//        public int DHI_no_gauges;
-//        public string coef_file;
-//        public string[,] exported_steps = new string[20, 6];
-
-//        public void readXML(string xml_file)
-//        {
-//            //XElement xml_content = XElement.Load(xml_file);
-
-//            DHI_type = xml_content.Element("DHI_type").Value;
-//            DHI_no_gauges = xml_content.Element("DHI_number_of_gauges").Value;
-//            coef_file = xml_content.Element("DHI_coefficients").Value;
-//            IEnumerable<XElement> steps = xml_content.Descendants("step");
-//            var i = 0;
-//            foreach (var step in steps)
-//            {
-//                exported_steps[i, 0] = step.Attribute("step").Value;
-//                var step_description = step.Descendants("description");
-//                string desc = step.Element("description").Value;
-//                exported_steps[i, 1] = step.Element("description").Value;
-//                exported_steps[i, 2] = step.Element("analog_holding").Value;
-//                exported_steps[i, 3] = step.Element("register").Value;
-//                exported_steps[i, 4] = step.Element("no_registers").Value;
-//                exported_steps[i, 5] = step.Element("values").Value;
-//                Console.WriteLine(exported_steps[i, 1]);
-//                i++;
-//            }
-//            Console.WriteLine("DHI type:\t" + DHI_type);
-//            Console.WriteLine("Number of gauges:\t" + DHI_no_gauges.ToString());
-//            Console.WriteLine("Coefficients file:\t" + coef_file);
-//            Console.WriteLine();
-//            for (int i = 0; i < 20; i++)
-//            {
-//                if (exported_steps[i, 0] <> null)
-//                {
-//                    Console.WriteLine("Step " + exported_steps[i, 0] + "\t" + exported_steps[i, 1]);
-//                }
-//            }
-//        }
-//    }
-//}

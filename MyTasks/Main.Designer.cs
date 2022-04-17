@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.statusBarLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.txtOrderBy = new System.Windows.Forms.Label();
@@ -35,7 +36,6 @@
             this.radioPriority = new System.Windows.Forms.RadioButton();
             this.groupTaskList = new System.Windows.Forms.GroupBox();
             this.dgvTasks = new System.Windows.Forms.DataGridView();
-            this.txtTaskList = new System.Windows.Forms.TextBox();
             this.groupShortTermPlan = new System.Windows.Forms.GroupBox();
             this.lblSaturday = new System.Windows.Forms.Label();
             this.lblFriday = new System.Windows.Forms.Label();
@@ -79,6 +79,8 @@
             this.rtfDay31 = new System.Windows.Forms.RichTextBox();
             this.rtfDay21 = new System.Windows.Forms.RichTextBox();
             this.rtfDay11 = new System.Windows.Forms.RichTextBox();
+            this.lblDueTo = new System.Windows.Forms.Label();
+            this.lblDescription = new System.Windows.Forms.Label();
             this.btnNewTask = new System.Windows.Forms.Button();
             this.statusBar.SuspendLayout();
             this.groupTaskList.SuspendLayout();
@@ -141,8 +143,9 @@
             // 
             // groupTaskList
             // 
+            this.groupTaskList.Controls.Add(this.lblDescription);
+            this.groupTaskList.Controls.Add(this.lblDueTo);
             this.groupTaskList.Controls.Add(this.dgvTasks);
-            this.groupTaskList.Controls.Add(this.txtTaskList);
             this.groupTaskList.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupTaskList.Location = new System.Drawing.Point(12, 62);
             this.groupTaskList.Name = "groupTaskList";
@@ -155,29 +158,24 @@
             // 
             this.dgvTasks.AllowUserToAddRows = false;
             this.dgvTasks.AllowUserToDeleteRows = false;
+            this.dgvTasks.AllowUserToResizeColumns = false;
             this.dgvTasks.AllowUserToResizeRows = false;
             this.dgvTasks.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvTasks.ColumnHeadersVisible = false;
             this.dgvTasks.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.dgvTasks.Location = new System.Drawing.Point(15, 245);
+            this.dgvTasks.Location = new System.Drawing.Point(15, 65);
             this.dgvTasks.MultiSelect = false;
             this.dgvTasks.Name = "dgvTasks";
             this.dgvTasks.RowHeadersVisible = false;
             this.dgvTasks.RowTemplate.Height = 25;
             this.dgvTasks.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvTasks.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dgvTasks.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvTasks.ShowCellToolTips = false;
             this.dgvTasks.ShowEditingIcon = false;
-            this.dgvTasks.Size = new System.Drawing.Size(392, 270);
+            this.dgvTasks.Size = new System.Drawing.Size(392, 450);
             this.dgvTasks.TabIndex = 1;
-            // 
-            // txtTaskList
-            // 
-            this.txtTaskList.Location = new System.Drawing.Point(15, 34);
-            this.txtTaskList.Multiline = true;
-            this.txtTaskList.Name = "txtTaskList";
-            this.txtTaskList.Size = new System.Drawing.Size(392, 177);
-            this.txtTaskList.TabIndex = 0;
-            this.txtTaskList.Text = "No pending tasks!";
+            this.dgvTasks.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvTasks_CellContentDoubleClick);
             // 
             // groupShortTermPlan
             // 
@@ -763,6 +761,28 @@
             this.rtfDay11.TabIndex = 0;
             this.rtfDay11.Text = "";
             // 
+            // lblDueTo
+            // 
+            this.lblDueTo.BackColor = System.Drawing.SystemColors.Control;
+            this.lblDueTo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDueTo.Location = new System.Drawing.Point(40, 34);
+            this.lblDueTo.Name = "lblDueTo";
+            this.lblDueTo.Size = new System.Drawing.Size(100, 30);
+            this.lblDueTo.TabIndex = 36;
+            this.lblDueTo.Text = "Due to";
+            this.lblDueTo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblDescription
+            // 
+            this.lblDescription.BackColor = System.Drawing.SystemColors.Control;
+            this.lblDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDescription.Location = new System.Drawing.Point(143, 34);
+            this.lblDescription.Name = "lblDescription";
+            this.lblDescription.Size = new System.Drawing.Size(264, 30);
+            this.lblDescription.TabIndex = 37;
+            this.lblDescription.Text = "Description";
+            this.lblDescription.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // btnNewTask
             // 
             this.btnNewTask.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -772,8 +792,10 @@
             this.btnNewTask.Size = new System.Drawing.Size(130, 30);
             this.btnNewTask.TabIndex = 1;
             this.btnNewTask.Text = "New task";
+            this.btnNewTask.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnNewTask.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnNewTask.UseVisualStyleBackColor = true;
+            this.btnNewTask.Click += new System.EventHandler(this.btnNewTask_Click);
             // 
             // Main
             // 
@@ -788,14 +810,15 @@
             this.Controls.Add(this.btnNewTask);
             this.Controls.Add(this.statusBar);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MyTasks";
+            this.Load += new System.EventHandler(this.Main_Load);
             this.statusBar.ResumeLayout(false);
             this.statusBar.PerformLayout();
             this.groupTaskList.ResumeLayout(false);
-            this.groupTaskList.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTasks)).EndInit();
             this.groupShortTermPlan.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -813,7 +836,6 @@
         private System.Windows.Forms.RadioButton radioPriority;
         private System.Windows.Forms.GroupBox groupTaskList;
         private System.Windows.Forms.GroupBox groupShortTermPlan;
-        private System.Windows.Forms.TextBox txtTaskList;
         private System.Windows.Forms.RichTextBox rtfDay11;
         private System.Windows.Forms.RichTextBox rtfDay17;
         private System.Windows.Forms.RichTextBox rtfDay16;
@@ -857,6 +879,8 @@
         private System.Windows.Forms.Label lblMonday;
         private System.Windows.Forms.Label lblSunday;
         private System.Windows.Forms.DataGridView dgvTasks;
+        private System.Windows.Forms.Label lblDueTo;
+        private System.Windows.Forms.Label lblDescription;
     }
 }
 
