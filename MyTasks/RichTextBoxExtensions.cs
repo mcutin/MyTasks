@@ -16,8 +16,9 @@ namespace MyTasks
         /// <param name="box">RichTextBox where <c>text</c> should be appended to Text property.</param>
         /// <param name="text">String to be appended to <c>box</c> Text property.</param>
         /// <param name="color">Color to format <c>text</c>.</param>
+        /// <param name="style">Text style to be applied. It can be <c>Regular</c>, <c>Bold</c>, <c>Italic</c>, <c>Underline</c> or <c>Strikeout</c>.</param>
         /// <param name="addNewLine">if <c>true</c>, <c>text</c> will be appended to <c>box</c> Text property with a new line character in the end.</param>
-        public static void AppendText(this RichTextBox box, string text, Color color, HorizontalAlignment alignment = HorizontalAlignment.Left, bool addNewLine = false)
+        public static void AppendText(this RichTextBox box, string text, Color color, FontStyle style, HorizontalAlignment alignment = HorizontalAlignment.Left, bool addNewLine = false)
         {
             // Define append position as the first character
             // after the last one in box.Text property
@@ -25,6 +26,7 @@ namespace MyTasks
             box.SelectionLength = 0;
 
             box.SuspendLayout();
+            box.SelectionFont = new Font(box.SelectionFont, style); // Apply font style
             box.SelectionColor = color;
             box.SelectionAlignment = alignment;
             box.AppendText(addNewLine ? $"{text}{Environment.NewLine}" : text);

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- MyTasks database for short term planning -->
+<!-- Priorities:
+		-1 - Low
+		 0 - Normal
+		 1 - High
+-->
+
+<root>
+	<task>
+		<id>1</id>
+		<priority>0</priority>
+		<dueDate>20/04/2022</dueDate>
+		<description>Test XMLReader class for MyTasks App</description>
+	</task>
+	<task>
+		<id>2</id>
+		<priority>0</priority>
+		<dueDate>16/04/2022</dueDate>
+		<description>Test short term plan update</description>
+	</task>
+	<task>
+		<id>3</id>
+		<priority>-1</priority>
+		<dueDate>03/05/2022</dueDate>
+		<description>Release first version of MyTasks App</description>
+	</task>
+	<task>
+		<id>4</id>
+		<priority>1</priority>
+		<dueDate>29/04/2022</dueDate>
+		<description>Write filter options</description>
+	</task>
+	<task>
+		<id>5</id>
+		<priority>-1</priority>
+		<dueDate>18/04/2022</dueDate>
+		<description>Something to do that I don't remember</description>
+	</task>
+	<task>
+		<id>6</id>
+		<priority>1</priority>
+		<dueDate>27/04/2022</dueDate>
+		<description>Just another high priority task</description>
+	</task>
+	<task>
+		<id>7</id>
+		<priority>0</priority>
+		<dueDate>19/06/2022</dueDate>
+		<description>Too far away to appear in short term plan</description>
+	</task>
+</root>
