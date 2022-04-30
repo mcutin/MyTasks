@@ -35,6 +35,8 @@
             this.radioDueDate = new System.Windows.Forms.RadioButton();
             this.radioPriority = new System.Windows.Forms.RadioButton();
             this.groupTaskList = new System.Windows.Forms.GroupBox();
+            this.lblDescription = new System.Windows.Forms.Label();
+            this.lblDueTo = new System.Windows.Forms.Label();
             this.dgvTasks = new System.Windows.Forms.DataGridView();
             this.groupShortTermPlan = new System.Windows.Forms.GroupBox();
             this.lblSaturday = new System.Windows.Forms.Label();
@@ -79,8 +81,6 @@
             this.rtfDay31 = new System.Windows.Forms.RichTextBox();
             this.rtfDay21 = new System.Windows.Forms.RichTextBox();
             this.rtfDay11 = new System.Windows.Forms.RichTextBox();
-            this.lblDueTo = new System.Windows.Forms.Label();
-            this.lblDescription = new System.Windows.Forms.Label();
             this.btnNewTask = new System.Windows.Forms.Button();
             this.statusBar.SuspendLayout();
             this.groupTaskList.SuspendLayout();
@@ -154,6 +154,28 @@
             this.groupTaskList.TabStop = false;
             this.groupTaskList.Text = "Task list";
             // 
+            // lblDescription
+            // 
+            this.lblDescription.BackColor = System.Drawing.SystemColors.Control;
+            this.lblDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDescription.Location = new System.Drawing.Point(143, 34);
+            this.lblDescription.Name = "lblDescription";
+            this.lblDescription.Size = new System.Drawing.Size(264, 30);
+            this.lblDescription.TabIndex = 37;
+            this.lblDescription.Text = "Description";
+            this.lblDescription.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblDueTo
+            // 
+            this.lblDueTo.BackColor = System.Drawing.SystemColors.Control;
+            this.lblDueTo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDueTo.Location = new System.Drawing.Point(40, 34);
+            this.lblDueTo.Name = "lblDueTo";
+            this.lblDueTo.Size = new System.Drawing.Size(100, 30);
+            this.lblDueTo.TabIndex = 36;
+            this.lblDueTo.Text = "Due to";
+            this.lblDueTo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // dgvTasks
             // 
             this.dgvTasks.AllowUserToAddRows = false;
@@ -176,6 +198,7 @@
             this.dgvTasks.Size = new System.Drawing.Size(392, 450);
             this.dgvTasks.TabIndex = 1;
             this.dgvTasks.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvTasks_CellContentDoubleClick);
+            this.dgvTasks.Click += new System.EventHandler(this.dgvTasks_Click);
             // 
             // groupShortTermPlan
             // 
@@ -318,6 +341,7 @@
             this.rtfDay57.Size = new System.Drawing.Size(80, 90);
             this.rtfDay57.TabIndex = 34;
             this.rtfDay57.Text = "";
+            this.rtfDay57.Enter += new System.EventHandler(this.rtfDay57_Enter);
             // 
             // rtfDay47
             // 
@@ -331,6 +355,7 @@
             this.rtfDay47.Size = new System.Drawing.Size(80, 90);
             this.rtfDay47.TabIndex = 33;
             this.rtfDay47.Text = "";
+            this.rtfDay47.Enter += new System.EventHandler(this.rtfDay47_Enter);
             // 
             // rtfDay37
             // 
@@ -344,6 +369,7 @@
             this.rtfDay37.Size = new System.Drawing.Size(80, 90);
             this.rtfDay37.TabIndex = 32;
             this.rtfDay37.Text = "";
+            this.rtfDay37.Enter += new System.EventHandler(this.rtfDay37_Enter);
             // 
             // rtfDay56
             // 
@@ -357,6 +383,7 @@
             this.rtfDay56.Size = new System.Drawing.Size(80, 90);
             this.rtfDay56.TabIndex = 31;
             this.rtfDay56.Text = "";
+            this.rtfDay56.Enter += new System.EventHandler(this.rtfDay56_Enter);
             // 
             // rtfDay46
             // 
@@ -370,6 +397,7 @@
             this.rtfDay46.Size = new System.Drawing.Size(80, 90);
             this.rtfDay46.TabIndex = 30;
             this.rtfDay46.Text = "";
+            this.rtfDay46.Enter += new System.EventHandler(this.rtfDay46_Enter);
             // 
             // rtfDay36
             // 
@@ -383,6 +411,7 @@
             this.rtfDay36.Size = new System.Drawing.Size(80, 90);
             this.rtfDay36.TabIndex = 29;
             this.rtfDay36.Text = "";
+            this.rtfDay36.Enter += new System.EventHandler(this.rtfDay36_Enter);
             // 
             // rtfDay55
             // 
@@ -396,6 +425,7 @@
             this.rtfDay55.Size = new System.Drawing.Size(80, 90);
             this.rtfDay55.TabIndex = 28;
             this.rtfDay55.Text = "";
+            this.rtfDay55.Enter += new System.EventHandler(this.rtfDay55_Enter);
             // 
             // rtfDay45
             // 
@@ -409,6 +439,7 @@
             this.rtfDay45.Size = new System.Drawing.Size(80, 90);
             this.rtfDay45.TabIndex = 27;
             this.rtfDay45.Text = "";
+            this.rtfDay45.Enter += new System.EventHandler(this.rtfDay45_Enter);
             // 
             // rtfDay35
             // 
@@ -422,6 +453,7 @@
             this.rtfDay35.Size = new System.Drawing.Size(80, 90);
             this.rtfDay35.TabIndex = 26;
             this.rtfDay35.Text = "";
+            this.rtfDay35.Enter += new System.EventHandler(this.rtfDay35_Enter);
             // 
             // rtfDay54
             // 
@@ -435,6 +467,7 @@
             this.rtfDay54.Size = new System.Drawing.Size(80, 90);
             this.rtfDay54.TabIndex = 25;
             this.rtfDay54.Text = "";
+            this.rtfDay54.Enter += new System.EventHandler(this.rtfDay54_Enter);
             // 
             // rtfDay44
             // 
@@ -448,6 +481,7 @@
             this.rtfDay44.Size = new System.Drawing.Size(80, 90);
             this.rtfDay44.TabIndex = 24;
             this.rtfDay44.Text = "";
+            this.rtfDay44.Enter += new System.EventHandler(this.rtfDay44_Enter);
             // 
             // rtfDay34
             // 
@@ -461,6 +495,7 @@
             this.rtfDay34.Size = new System.Drawing.Size(80, 90);
             this.rtfDay34.TabIndex = 23;
             this.rtfDay34.Text = "";
+            this.rtfDay34.Enter += new System.EventHandler(this.rtfDay34_Enter);
             // 
             // rtfDay53
             // 
@@ -474,6 +509,7 @@
             this.rtfDay53.Size = new System.Drawing.Size(80, 90);
             this.rtfDay53.TabIndex = 22;
             this.rtfDay53.Text = "";
+            this.rtfDay53.Enter += new System.EventHandler(this.rtfDay53_Enter);
             // 
             // rtfDay43
             // 
@@ -487,6 +523,7 @@
             this.rtfDay43.Size = new System.Drawing.Size(80, 90);
             this.rtfDay43.TabIndex = 21;
             this.rtfDay43.Text = "";
+            this.rtfDay43.Enter += new System.EventHandler(this.rtfDay43_Enter);
             // 
             // rtfDay33
             // 
@@ -500,6 +537,7 @@
             this.rtfDay33.Size = new System.Drawing.Size(80, 90);
             this.rtfDay33.TabIndex = 20;
             this.rtfDay33.Text = "";
+            this.rtfDay33.Enter += new System.EventHandler(this.rtfDay33_Enter);
             // 
             // rtfDay52
             // 
@@ -513,6 +551,7 @@
             this.rtfDay52.Size = new System.Drawing.Size(80, 90);
             this.rtfDay52.TabIndex = 19;
             this.rtfDay52.Text = "";
+            this.rtfDay52.Enter += new System.EventHandler(this.rtfDay52_Enter);
             // 
             // rtfDay42
             // 
@@ -526,6 +565,7 @@
             this.rtfDay42.Size = new System.Drawing.Size(80, 90);
             this.rtfDay42.TabIndex = 18;
             this.rtfDay42.Text = "";
+            this.rtfDay42.Enter += new System.EventHandler(this.rtfDay42_Enter);
             // 
             // rtfDay32
             // 
@@ -539,6 +579,7 @@
             this.rtfDay32.Size = new System.Drawing.Size(80, 90);
             this.rtfDay32.TabIndex = 17;
             this.rtfDay32.Text = "";
+            this.rtfDay32.Enter += new System.EventHandler(this.rtfDay32_Enter);
             // 
             // rtfDay27
             // 
@@ -552,6 +593,7 @@
             this.rtfDay27.Size = new System.Drawing.Size(80, 90);
             this.rtfDay27.TabIndex = 16;
             this.rtfDay27.Text = "";
+            this.rtfDay27.Enter += new System.EventHandler(this.rtfDay27_Enter);
             // 
             // rtfDay26
             // 
@@ -565,6 +607,7 @@
             this.rtfDay26.Size = new System.Drawing.Size(80, 90);
             this.rtfDay26.TabIndex = 15;
             this.rtfDay26.Text = "";
+            this.rtfDay26.Enter += new System.EventHandler(this.rtfDay26_Enter);
             // 
             // rtfDay25
             // 
@@ -578,6 +621,7 @@
             this.rtfDay25.Size = new System.Drawing.Size(80, 90);
             this.rtfDay25.TabIndex = 14;
             this.rtfDay25.Text = "";
+            this.rtfDay25.Enter += new System.EventHandler(this.rtfDay25_Enter);
             // 
             // rtfDay24
             // 
@@ -591,6 +635,7 @@
             this.rtfDay24.Size = new System.Drawing.Size(80, 90);
             this.rtfDay24.TabIndex = 13;
             this.rtfDay24.Text = "";
+            this.rtfDay24.Enter += new System.EventHandler(this.rtfDay24_Enter);
             // 
             // rtfDay23
             // 
@@ -604,6 +649,7 @@
             this.rtfDay23.Size = new System.Drawing.Size(80, 90);
             this.rtfDay23.TabIndex = 12;
             this.rtfDay23.Text = "";
+            this.rtfDay23.Enter += new System.EventHandler(this.rtfDay23_Enter);
             // 
             // rtfDay22
             // 
@@ -617,6 +663,7 @@
             this.rtfDay22.Size = new System.Drawing.Size(80, 90);
             this.rtfDay22.TabIndex = 11;
             this.rtfDay22.Text = "";
+            this.rtfDay22.Enter += new System.EventHandler(this.rtfDay22_Enter);
             // 
             // rtfDay17
             // 
@@ -630,6 +677,7 @@
             this.rtfDay17.Size = new System.Drawing.Size(80, 90);
             this.rtfDay17.TabIndex = 10;
             this.rtfDay17.Text = "";
+            this.rtfDay17.Enter += new System.EventHandler(this.rtfDay17_Enter);
             // 
             // rtfDay16
             // 
@@ -643,6 +691,7 @@
             this.rtfDay16.Size = new System.Drawing.Size(80, 90);
             this.rtfDay16.TabIndex = 9;
             this.rtfDay16.Text = "";
+            this.rtfDay16.Enter += new System.EventHandler(this.rtfDay16_Enter);
             // 
             // rtfDay15
             // 
@@ -656,6 +705,7 @@
             this.rtfDay15.Size = new System.Drawing.Size(80, 90);
             this.rtfDay15.TabIndex = 8;
             this.rtfDay15.Text = "";
+            this.rtfDay15.Enter += new System.EventHandler(this.rtfDay15_Enter);
             // 
             // rtfDay14
             // 
@@ -669,6 +719,7 @@
             this.rtfDay14.Size = new System.Drawing.Size(80, 90);
             this.rtfDay14.TabIndex = 7;
             this.rtfDay14.Text = "";
+            this.rtfDay14.Enter += new System.EventHandler(this.rtfDay14_Enter);
             // 
             // rtfDay13
             // 
@@ -682,6 +733,7 @@
             this.rtfDay13.Size = new System.Drawing.Size(80, 90);
             this.rtfDay13.TabIndex = 6;
             this.rtfDay13.Text = "";
+            this.rtfDay13.Enter += new System.EventHandler(this.rtfDay13_Enter);
             // 
             // rtfDay12
             // 
@@ -695,6 +747,7 @@
             this.rtfDay12.Size = new System.Drawing.Size(80, 90);
             this.rtfDay12.TabIndex = 5;
             this.rtfDay12.Text = "";
+            this.rtfDay12.Enter += new System.EventHandler(this.rtfDay12_Enter);
             // 
             // rtfDay51
             // 
@@ -708,6 +761,7 @@
             this.rtfDay51.Size = new System.Drawing.Size(80, 90);
             this.rtfDay51.TabIndex = 4;
             this.rtfDay51.Text = "";
+            this.rtfDay51.Enter += new System.EventHandler(this.rtfDay51_Enter);
             // 
             // rtfDay41
             // 
@@ -721,6 +775,7 @@
             this.rtfDay41.Size = new System.Drawing.Size(80, 90);
             this.rtfDay41.TabIndex = 3;
             this.rtfDay41.Text = "";
+            this.rtfDay41.Enter += new System.EventHandler(this.rtfDay41_Enter);
             // 
             // rtfDay31
             // 
@@ -734,6 +789,7 @@
             this.rtfDay31.Size = new System.Drawing.Size(80, 90);
             this.rtfDay31.TabIndex = 2;
             this.rtfDay31.Text = "";
+            this.rtfDay31.Enter += new System.EventHandler(this.rtfDay31_Enter);
             // 
             // rtfDay21
             // 
@@ -747,6 +803,7 @@
             this.rtfDay21.Size = new System.Drawing.Size(80, 90);
             this.rtfDay21.TabIndex = 1;
             this.rtfDay21.Text = "";
+            this.rtfDay21.Enter += new System.EventHandler(this.rtfDay21_Enter);
             // 
             // rtfDay11
             // 
@@ -760,28 +817,7 @@
             this.rtfDay11.Size = new System.Drawing.Size(80, 90);
             this.rtfDay11.TabIndex = 0;
             this.rtfDay11.Text = "";
-            // 
-            // lblDueTo
-            // 
-            this.lblDueTo.BackColor = System.Drawing.SystemColors.Control;
-            this.lblDueTo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDueTo.Location = new System.Drawing.Point(40, 34);
-            this.lblDueTo.Name = "lblDueTo";
-            this.lblDueTo.Size = new System.Drawing.Size(100, 30);
-            this.lblDueTo.TabIndex = 36;
-            this.lblDueTo.Text = "Due to";
-            this.lblDueTo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblDescription
-            // 
-            this.lblDescription.BackColor = System.Drawing.SystemColors.Control;
-            this.lblDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDescription.Location = new System.Drawing.Point(143, 34);
-            this.lblDescription.Name = "lblDescription";
-            this.lblDescription.Size = new System.Drawing.Size(264, 30);
-            this.lblDescription.TabIndex = 37;
-            this.lblDescription.Text = "Description";
-            this.lblDescription.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rtfDay11.Enter += new System.EventHandler(this.rtfDay11_Enter);
             // 
             // btnNewTask
             // 

@@ -294,12 +294,19 @@ namespace MyTasks
                 }
                 if (shortTerm[w, d].LowTasks > 0)
                 {
-                    day.AppendText(shortTerm[w, d].LowTasks.ToString(), Color.Blue, FontStyle.Regular,
-                        HorizontalAlignment.Left, false);
+                    day.AppendText(shortTerm[w, d].LowTasks.ToString(), Color.Blue);
                 }
+                else
+                {
+                    day.AppendText(Environment.NewLine);
+                    day.AppendText(Environment.NewLine);
+                }
+                day.AppendText(shortTerm[w, d].DayDate.ToString("dd/MM/yyyy"), Color.White,
+                    FontStyle.Regular, HorizontalAlignment.Left, false);
             }
             else
             {
+                day.Text = "          "; // To avoid exception in dgvTasks_Click
                 day.Enabled = false;
             }
         }
@@ -351,6 +358,240 @@ namespace MyTasks
         private void Main_Load(object sender, EventArgs e)
         {
             LoadTasks();
+        }
+
+        private void rtfDay11_Enter(object sender, EventArgs e)
+        {
+            rtfDay11.Enabled = false;
+            rtfDay11.Enabled = true;
+        }
+
+        private void rtfDay12_Enter(object sender, EventArgs e)
+        {
+            rtfDay12.Enabled = false;
+            rtfDay12.Enabled = true;
+        }
+
+        private void rtfDay13_Enter(object sender, EventArgs e)
+        {
+            rtfDay13.Enabled = false;
+            rtfDay13.Enabled = true;
+        }
+
+        private void rtfDay14_Enter(object sender, EventArgs e)
+        {
+            rtfDay14.Enabled = false;
+            rtfDay14.Enabled = true;
+        }
+
+        private void rtfDay15_Enter(object sender, EventArgs e)
+        {
+            rtfDay15.Enabled = false;
+            rtfDay15.Enabled = true;
+        }
+
+        private void rtfDay16_Enter(object sender, EventArgs e)
+        {
+            rtfDay16.Enabled = false;
+            rtfDay16.Enabled = true;
+        }
+
+        private void rtfDay17_Enter(object sender, EventArgs e)
+        {
+            rtfDay17.Enabled = false;
+            rtfDay17.Enabled = true;
+        }
+
+        private void rtfDay21_Enter(object sender, EventArgs e)
+        {
+            rtfDay21.Enabled = false;
+            rtfDay21.Enabled = true;
+        }
+
+        private void rtfDay22_Enter(object sender, EventArgs e)
+        {
+            rtfDay22.Enabled = false;
+            rtfDay22.Enabled = true;
+        }
+
+        private void rtfDay23_Enter(object sender, EventArgs e)
+        {
+            rtfDay23.Enabled = false;
+            rtfDay23.Enabled = true;
+        }
+
+        private void rtfDay24_Enter(object sender, EventArgs e)
+        {
+            rtfDay24.Enabled = false;
+            rtfDay24.Enabled = true;
+        }
+
+        private void rtfDay25_Enter(object sender, EventArgs e)
+        {
+            rtfDay25.Enabled = false;
+            rtfDay25.Enabled = true;
+        }
+
+        private void rtfDay26_Enter(object sender, EventArgs e)
+        {
+            rtfDay26.Enabled = false;
+            rtfDay26.Enabled = true;
+        }
+
+        private void rtfDay27_Enter(object sender, EventArgs e)
+        {
+            rtfDay27.Enabled = false;
+            rtfDay27.Enabled = true;
+        }
+
+        private void rtfDay31_Enter(object sender, EventArgs e)
+        {
+            rtfDay31.Enabled = false;
+            rtfDay31.Enabled = true;
+        }
+
+        private void rtfDay32_Enter(object sender, EventArgs e)
+        {
+            rtfDay32.Enabled = false;
+            rtfDay32.Enabled = true;
+        }
+
+        private void rtfDay33_Enter(object sender, EventArgs e)
+        {
+            rtfDay33.Enabled = false;
+            rtfDay33.Enabled = true;
+        }
+
+        private void rtfDay34_Enter(object sender, EventArgs e)
+        {
+            rtfDay34.Enabled = false;
+            rtfDay34.Enabled = true;
+        }
+
+        private void rtfDay35_Enter(object sender, EventArgs e)
+        {
+            rtfDay35.Enabled = false;
+            rtfDay35.Enabled = true;
+        }
+
+        private void rtfDay36_Enter(object sender, EventArgs e)
+        {
+            rtfDay36.Enabled = false;
+            rtfDay36.Enabled = true;
+        }
+
+        private void rtfDay37_Enter(object sender, EventArgs e)
+        {
+            rtfDay37.Enabled = false;
+            rtfDay37.Enabled = true;
+        }
+
+        private void rtfDay41_Enter(object sender, EventArgs e)
+        {
+            rtfDay41.Enabled = false;
+            rtfDay41.Enabled = true;
+        }
+
+        private void rtfDay42_Enter(object sender, EventArgs e)
+        {
+            rtfDay42.Enabled = false;
+            rtfDay42.Enabled = true;
+        }
+
+        private void rtfDay43_Enter(object sender, EventArgs e)
+        {
+            rtfDay43.Enabled = false;
+            rtfDay43.Enabled = true;
+        }
+
+        private void rtfDay44_Enter(object sender, EventArgs e)
+        {
+            rtfDay44.Enabled = false;
+            rtfDay44.Enabled = true;
+        }
+
+        private void rtfDay45_Enter(object sender, EventArgs e)
+        {
+            rtfDay45.Enabled = false;
+            rtfDay45.Enabled = true;
+        }
+
+        private void rtfDay46_Enter(object sender, EventArgs e)
+        {
+            rtfDay46.Enabled = false;
+            rtfDay46.Enabled = true;
+        }
+
+        private void rtfDay47_Enter(object sender, EventArgs e)
+        {
+            rtfDay47.Enabled = false;
+            rtfDay47.Enabled = true;
+        }
+
+        private void rtfDay51_Enter(object sender, EventArgs e)
+        {
+            rtfDay51.Enabled = false;
+            rtfDay51.Enabled = true;
+        }
+
+        private void rtfDay52_Enter(object sender, EventArgs e)
+        {
+            rtfDay52.Enabled = false;
+            rtfDay52.Enabled = true;
+        }
+
+        private void rtfDay53_Enter(object sender, EventArgs e)
+        {
+            rtfDay53.Enabled = false;
+            rtfDay53.Enabled = true;
+        }
+
+        private void rtfDay54_Enter(object sender, EventArgs e)
+        {
+            rtfDay54.Enabled = false;
+            rtfDay54.Enabled = true;
+        }
+
+        private void rtfDay55_Enter(object sender, EventArgs e)
+        {
+            rtfDay55.Enabled = false;
+            rtfDay55.Enabled = true;
+        }
+
+        private void rtfDay56_Enter(object sender, EventArgs e)
+        {
+            rtfDay56.Enabled = false;
+            rtfDay56.Enabled = true;
+        }
+
+        private void rtfDay57_Enter(object sender, EventArgs e)
+        {
+            rtfDay57.Enabled = false;
+            rtfDay57.Enabled = true;
+        }
+
+        private void dgvTasks_Click(object sender, EventArgs e)
+        {
+            // Create collection with all the Rich text boxes in short term plan
+            Control.ControlCollection ShortTermDays = groupShortTermPlan.Controls;
+
+            string selectedTaskDate = dgvTasks.SelectedRows[0].Cells[1].Value.ToString();
+
+            foreach(Control ctl in ShortTermDays)
+            {
+                if (ctl is RichTextBox)
+                {
+                    if (selectedTaskDate == ctl.Text.Substring(ctl.Text.Length - 10))
+                    {
+                        ctl.BackColor = Color.LemonChiffon;
+                    }
+                    else
+                    {
+                        ctl.BackColor = Color.White;
+                    }
+                    
+                }
+            }
         }
     }
 }
