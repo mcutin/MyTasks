@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -19,12 +20,12 @@ namespace MyTasks
     {
         XMLReader tasks = new XMLReader("tasks.xml");
         // Fields
-        private Day[,] shortPlanMonth = new Day[5, 7];
+        //private Day[,] shortPlanMonth = new Day[5, 7];
 
         // Constructor
         public Main()
         {
-            InitializeComponent();  
+            InitializeComponent();
         }
 
         // Methods
@@ -87,7 +88,7 @@ namespace MyTasks
                 " normal, " + tasks.TaskHighCount.ToString() + " high";
         }
 
-        public void UpdateShortTermPlan()
+        private void UpdateShortTermPlan()
         {
             // Initilalize short plan array
             Day[,] shortTerm = new Day[5, 7];
@@ -99,6 +100,98 @@ namespace MyTasks
                 }
             }
 
+            // Clear all days in short term plan before updating
+            ClearAllCalendar();
+
+            UpdateCalendar(shortTerm);
+
+            // Fill in all the data for each Day in short term plan
+            DateTime date = tasks.OldestDate;
+
+            // Dates needed to properly update groupShortTermPlan.Text
+            DateTime firstDate = date;
+            DateTime lastDate;
+
+            for (int row = 0; row <= 4; row++)
+            {
+                for (int col = 0; col <= 6; col++)
+                {
+                    if (shortTerm[row, col].Enabled)
+                    {
+                        // Fill in date of day
+                        shortTerm[row, col].DayDate = date;
+
+                        // Fill in tasks per priority
+                        // Low
+                        IEnumerable<XElement> lp = from t in tasks.Content.Elements("task")
+                                                   where
+                                                       (int)t.Element("priority") == 0 &&
+                                                       (string)t.Element("dueDate") == date.ToString("dd/MM/yyyy")
+                                                   select t;
+                        //foreach (XElement el in lp)
+                        //    Console.WriteLine(el);
+
+                        shortTerm[row, col].LowTasks = lp.Count();
+                        // Normal
+                        IEnumerable<XElement> np = from t in tasks.Content.Elements("task")
+                                                   where 
+                                                       (int)t.Element("priority") == 1 &&
+                                                       (string)t.Element("dueDate") == date.ToString("dd/MM/yyyy")
+                                                   select t;
+                        //foreach (XElement el in np)
+                        //    Console.WriteLine(el);
+
+                        shortTerm[row, col].NormalTasks = np.Count();
+                        // High
+                        IEnumerable<XElement> hp = from t in tasks.Content.Elements("task")
+                                                   where 
+                                                       (int)t.Element("priority") == 2 &&
+                                                       (string)t.Element("dueDate") == date.ToString("dd/MM/yyyy")
+                                                   select t;
+                        //foreach (XElement el in hp)
+                        //    Console.WriteLine(el);
+
+                        shortTerm[row, col].HighTasks = hp.Count();
+
+                        // Increment date
+                        date = date.AddDays(1);
+                    }
+                }
+            }
+
+            // Update all days in short term plan
+            UpdateAllDays(shortTerm);
+
+            // Update groupShortTermPlan Text property
+            lastDate = shortTerm[4, 6].DayDate;            
+            groupShortTermPlan.Text = "Short term plan - " + ShortTermPeriod(firstDate, lastDate);
+        }
+
+        private string ShortTermPeriod(DateTime firstDay, DateTime lastDay)
+        {
+            string monthST = "";
+            if (firstDay.Month == lastDay.Month)
+            {
+                monthST = firstDay.ToString("MMMM", new CultureInfo("en-US"));
+            }
+            else if (firstDay.Month == lastDay.Month - 1)
+            {
+                monthST = firstDay.ToString("MMMM", new CultureInfo("en-US")) + "/" +
+                    lastDay.ToString("MMMM", new CultureInfo("en-US"));
+            }
+            else
+            {
+                DateTime dat = firstDay.AddMonths(1);
+                monthST = firstDay.ToString("MMMM", new CultureInfo("en-US")) + "/" +
+                    dat.ToString("MMMM", new CultureInfo("en-US")) + "/" +
+                    lastDay.ToString("MMMM", new CultureInfo("en-US"));
+            }
+
+            return monthST;
+        }
+
+        private void UpdateCalendar(Day[,] shortTerm)
+        {
             // Current moth is based on oldest task
             // Check day of the week of oldest task due date
             DayOfWeek dow = tasks.OldestDate.DayOfWeek;
@@ -169,86 +262,9 @@ namespace MyTasks
                     shortTerm[0, 6].Enabled = true;
                     break;
             }
-
-            // Fill in all the data for each Day in short term plan
-            DateTime date = tasks.OldestDate;
-
-            for (int row = 0; row <= 4; row++)
-            {
-                for (int col = 0; col <= 6; col++)
-                {
-                    if (shortTerm[row, col].Enabled)
-                    {
-                        // Fill in date of day
-                        shortTerm[row, col].DayDate = date;
-
-                        // Fill in tasks per priority
-                        // Low
-                        IEnumerable<XElement> lp = from t in tasks.Content.Elements("task")
-                                                   where t.Element("dueDate").ToString() == date.ToString("dd/MM/yyyy")
-                                                   && (int)t.Element("priority") == 0
-                                                   select t;
-                        shortTerm[row, col].LowTasks = lp.Count();
-                        // Normal
-                        IEnumerable<XElement> np = from t in tasks.Content.Elements("task")
-                                                   where t.Element("dueDate").ToString() == date.ToString("dd/MM/yyyy")
-                                                   && (int)t.Element("priority") == 1
-                                                   select t;
-                        shortTerm[row, col].NormalTasks = np.Count();
-                        // High
-                        IEnumerable<XElement> hp = from t in tasks.Content.Elements("task")
-                                                   where t.Element("dueDate").ToString() == date.ToString("dd/MM/yyyy")
-                                                   && (int)t.Element("priority") == 2
-                                                   select t;
-                        shortTerm[row, col].HighTasks = hp.Count();
-
-                        // Increment date
-                        date = date.AddDays(1);
-                    }
-                }
-            }
-            UpdateDay(rtfDay11, shortTerm);
-            UpdateDay(rtfDay12, shortTerm);
-            UpdateDay(rtfDay13, shortTerm);
-            UpdateDay(rtfDay14, shortTerm);
-            UpdateDay(rtfDay15, shortTerm);
-            UpdateDay(rtfDay16, shortTerm);
-            UpdateDay(rtfDay17, shortTerm);
-            UpdateDay(rtfDay21, shortTerm);
-            UpdateDay(rtfDay22, shortTerm);
-            UpdateDay(rtfDay23, shortTerm);
-            UpdateDay(rtfDay24, shortTerm);
-            UpdateDay(rtfDay25, shortTerm);
-            UpdateDay(rtfDay26, shortTerm);
-            UpdateDay(rtfDay27, shortTerm);
-            UpdateDay(rtfDay31, shortTerm);
-            UpdateDay(rtfDay32, shortTerm);
-            UpdateDay(rtfDay33, shortTerm);
-            UpdateDay(rtfDay34, shortTerm);
-            UpdateDay(rtfDay35, shortTerm);
-            UpdateDay(rtfDay36, shortTerm);
-            UpdateDay(rtfDay37, shortTerm);
-            UpdateDay(rtfDay41, shortTerm);
-            UpdateDay(rtfDay42, shortTerm);
-            UpdateDay(rtfDay43, shortTerm);
-            UpdateDay(rtfDay44, shortTerm);
-            UpdateDay(rtfDay45, shortTerm);
-            UpdateDay(rtfDay46, shortTerm);
-            UpdateDay(rtfDay47, shortTerm);
-            UpdateDay(rtfDay51, shortTerm);
-            UpdateDay(rtfDay52, shortTerm);
-            UpdateDay(rtfDay53, shortTerm);
-            UpdateDay(rtfDay54, shortTerm);
-            UpdateDay(rtfDay55, shortTerm);
-            UpdateDay(rtfDay56, shortTerm);
-            UpdateDay(rtfDay57, shortTerm);
-
-            // Update groupShortTermPlan Text property
-            string month = tasks.OldestDate.ToString("MMMM",new CultureInfo("en-US"));
-            groupShortTermPlan.Text = "Short term plan - " + month;
         }
 
-        public void UpdateDay(RichTextBox day, Day[,] shortTerm)
+        private void UpdateDay(RichTextBox day, Day[,] shortTerm)
         {
             Int32.TryParse(day.Name.Substring(day.Name.Length - 1, 1), out int d);
             Int32.TryParse(day.Name.Substring(day.Name.Length - 2, 1), out int w);
@@ -278,8 +294,39 @@ namespace MyTasks
                 }
                 if (shortTerm[w, d].LowTasks > 0)
                 {
-                    day.AppendText(shortTerm[w, d].LowTasks.ToString(), Color.Blue);
+                    day.AppendText(shortTerm[w, d].LowTasks.ToString(), Color.Blue, FontStyle.Regular,
+                        HorizontalAlignment.Left, false);
                 }
+            }
+            else
+            {
+                day.Enabled = false;
+            }
+        }
+
+        private void UpdateAllDays(Day [,] shortTerm)
+        {
+            // Create collection with all the Rich text boxes in short term plan
+            Control.ControlCollection ShortTermDays = groupShortTermPlan.Controls;
+
+            this.SuspendLayout();
+            foreach (Control ctl in ShortTermDays)
+            {
+                if (ctl is RichTextBox)
+                    UpdateDay((RichTextBox)ctl, shortTerm);
+            }
+            this.ResumeLayout();
+        }
+
+        private void ClearAllCalendar()
+        {
+            // Create collection with all the Rich text boxes in short term plan
+            Control.ControlCollection ShortTermDays = groupShortTermPlan.Controls;
+
+            foreach (Control ctl in ShortTermDays)
+            {
+                if (ctl is RichTextBox)
+                    ctl.Text = "";
             }
         }
 

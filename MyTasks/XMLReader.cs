@@ -134,8 +134,8 @@ namespace MyTasks
                             prio = "N/D";
                             break;
                     }
-                    Debug.WriteLine("Task ID: " + task.Element("id").Value.ToString() +
-                        ", " + prio + " priority");
+                    //Debug.WriteLine("Task ID: " + task.Element("id").Value.ToString() +
+                    //    ", " + prio + " priority");
                     counter++;
                 }
                 return counter;
