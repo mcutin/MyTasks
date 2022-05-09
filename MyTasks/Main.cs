@@ -19,8 +19,7 @@ namespace MyTasks
     public partial class Main : Form
     {
         XMLReader tasks = new XMLReader("tasks.xml");
-        // Fields
-        //private Day[,] shortPlanMonth = new Day[5, 7];
+        List<Task> taskList = new List<Task>();
 
         // Constructor
         public Main()
@@ -32,6 +31,20 @@ namespace MyTasks
         public void LoadTasks()
         {            
             tasks.Open();
+
+            // Populate taskList with tasks loaded from XML file
+            IEnumerable<XElement> allTasks = from t in tasks.Content.Descendants("task")
+                                             select t;
+            foreach (XElement task in allTasks)
+            {
+                Int32.TryParse(task.Element("id").Value, out int tempID);
+                Int32.TryParse(task.Element("priority").Value, out int tempPriority);
+                DateTime tempDate = DateTime.ParseExact(task.Element("dueDate").Value, "dd/MM/yyyy", null);
+                string tempDescription = task.Element("description").Value;
+                Task tempTask = new Task(tempID, tempPriority, tempDate, tempDescription);
+                taskList.Add(tempTask);
+            }
+            
             UpdateStatusBar();
             FormatTaskList();
             UpdateTaskList();
@@ -52,16 +65,15 @@ namespace MyTasks
         }
 
         private void UpdateTaskList()
-        {            
-            IEnumerable<XElement> allTasks = tasks.Content.Descendants("task");
-            foreach (var task in allTasks)
+        {
+            dgvTasks.Rows.Clear();            
+            foreach (Task t in taskList)
             {
                 dgvTasks.Rows.Add();
                 DataGridViewImageCell prioImg = (DataGridViewImageCell)dgvTasks.Rows[dgvTasks.Rows.Count - 1].Cells[0];
                 DataGridViewTextBoxCell date = (DataGridViewTextBoxCell)dgvTasks.Rows[dgvTasks.Rows.Count - 1].Cells[1];
                 DataGridViewTextBoxCell description = (DataGridViewTextBoxCell)dgvTasks.Rows[dgvTasks.Rows.Count - 1].Cells[2];
-                Int32.TryParse(task.Element("priority").Value, out int priority);
-                switch (priority)
+                switch (t.Priority)
                 {
                     case 0:
                         prioImg.Value = Properties.Resources.Low;
@@ -76,16 +88,35 @@ namespace MyTasks
                         prioImg.Value = null;
                         break;
                 }
-                date.Value = task.Element("dueDate").Value;
-                description.Value = task.Element("description").Value;
+                date.Value = t.DueDate;
+                description.Value = t.Description;
             }
         }
 
         private void UpdateStatusBar()
         {
-            statusBarLabel.Text = tasks.TaskCount.ToString() + " tasks listed - Priority: " +
-                tasks.TaskLowCount.ToString() + " low, " + tasks.TaskNormalCount.ToString() +
-                " normal, " + tasks.TaskHighCount.ToString() + " high";
+            int lowP = 0;
+            int normalP = 0;
+            int highP = 0;
+            foreach(Task t in taskList)
+            {
+                switch (t.Priority)
+                {
+                    case 0:
+                        lowP++;
+                        break;
+                    case 1:
+                        normalP++;
+                        break;
+                    case 2:
+                        highP++;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            statusBarLabel.Text = taskList.Count().ToString() + " tasks listed - Priority: " +
+                lowP.ToString() + " low, " + normalP.ToString() + " normal, " + highP.ToString() + " high";
         }
 
         private void UpdateShortTermPlan()
@@ -103,13 +134,21 @@ namespace MyTasks
             // Clear all days in short term plan before updating
             ClearAllCalendar();
 
-            UpdateCalendar(shortTerm);
-
             // Fill in all the data for each Day in short term plan
-            DateTime date = tasks.OldestDate;
+
+            // Returns the oldest task date
+            DateTime date = DateTime.MaxValue;
+            foreach (Task t in taskList)
+            {
+                if (date > t.DueDate)
+                {
+                    date = t.DueDate;
+                }
+            }
+
+            UpdateCalendar(shortTerm, date);
 
             // Dates needed to properly update groupShortTermPlan.Text
-            DateTime firstDate = date;
             DateTime lastDate;
 
             for (int row = 0; row <= 4; row++)
@@ -123,33 +162,21 @@ namespace MyTasks
 
                         // Fill in tasks per priority
                         // Low
-                        IEnumerable<XElement> lp = from t in tasks.Content.Elements("task")
-                                                   where
-                                                       (int)t.Element("priority") == 0 &&
-                                                       (string)t.Element("dueDate") == date.ToString("dd/MM/yyyy")
+                        IEnumerable<Task> lp = from t in taskList
+                                                   where t.Priority == 0 && t.DueDate == date
                                                    select t;
-                        //foreach (XElement el in lp)
-                        //    Console.WriteLine(el);
 
                         shortTerm[row, col].LowTasks = lp.Count();
                         // Normal
-                        IEnumerable<XElement> np = from t in tasks.Content.Elements("task")
-                                                   where 
-                                                       (int)t.Element("priority") == 1 &&
-                                                       (string)t.Element("dueDate") == date.ToString("dd/MM/yyyy")
+                        IEnumerable<Task> np = from t in taskList
+                                                   where t.Priority == 1 && t.DueDate == date
                                                    select t;
-                        //foreach (XElement el in np)
-                        //    Console.WriteLine(el);
 
                         shortTerm[row, col].NormalTasks = np.Count();
                         // High
-                        IEnumerable<XElement> hp = from t in tasks.Content.Elements("task")
-                                                   where 
-                                                       (int)t.Element("priority") == 2 &&
-                                                       (string)t.Element("dueDate") == date.ToString("dd/MM/yyyy")
+                        IEnumerable<Task> hp = from t in taskList
+                                                   where t.Priority == 2 && t.DueDate == date
                                                    select t;
-                        //foreach (XElement el in hp)
-                        //    Console.WriteLine(el);
 
                         shortTerm[row, col].HighTasks = hp.Count();
 
@@ -164,12 +191,12 @@ namespace MyTasks
 
             // Update groupShortTermPlan Text property
             lastDate = shortTerm[4, 6].DayDate;            
-            groupShortTermPlan.Text = "Short term plan - " + ShortTermPeriod(firstDate, lastDate);
+            groupShortTermPlan.Text = "Short term plan - " + ShortTermPeriod(date, lastDate);
         }
 
         private string ShortTermPeriod(DateTime firstDay, DateTime lastDay)
         {
-            string monthST = "";
+            string monthST;
             if (firstDay.Month == lastDay.Month)
             {
                 monthST = firstDay.ToString("MMMM", new CultureInfo("en-US"));
@@ -190,11 +217,11 @@ namespace MyTasks
             return monthST;
         }
 
-        private void UpdateCalendar(Day[,] shortTerm)
+        private void UpdateCalendar(Day[,] shortTerm, DateTime oldestDate)
         {
-            // Current moth is based on oldest task
+            // Current month is based on oldest task
             // Check day of the week of oldest task due date
-            DayOfWeek dow = tasks.OldestDate.DayOfWeek;
+            DayOfWeek dow = oldestDate.DayOfWeek;
 
             switch (dow)
             {
@@ -576,6 +603,7 @@ namespace MyTasks
             Control.ControlCollection ShortTermDays = groupShortTermPlan.Controls;
 
             string selectedTaskDate = dgvTasks.SelectedRows[0].Cells[1].Value.ToString();
+            selectedTaskDate = selectedTaskDate.Substring(0, 10);
 
             foreach(Control ctl in ShortTermDays)
             {
@@ -592,6 +620,28 @@ namespace MyTasks
                     
                 }
             }
+        }
+
+        private void radioDueDate_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioDueDate.Checked)
+            {
+                UpdateTaskList();
+            }
+        }
+
+        private void radioPriority_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioPriority.Checked)
+            {
+                UpdateTaskList();
+            }
+        }
+
+        private void lblAbout_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            About aboutDlg = new About();
+            aboutDlg.ShowDialog();
         }
     }
 }

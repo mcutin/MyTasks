@@ -82,6 +82,7 @@
             this.rtfDay21 = new System.Windows.Forms.RichTextBox();
             this.rtfDay11 = new System.Windows.Forms.RichTextBox();
             this.btnNewTask = new System.Windows.Forms.Button();
+            this.lblAbout = new System.Windows.Forms.LinkLabel();
             this.statusBar.SuspendLayout();
             this.groupTaskList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTasks)).BeginInit();
@@ -124,22 +125,24 @@
             this.radioDueDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioDueDate.Location = new System.Drawing.Point(294, 15);
             this.radioDueDate.Name = "radioDueDate";
-            this.radioDueDate.Size = new System.Drawing.Size(93, 24);
+            this.radioDueDate.Size = new System.Drawing.Size(213, 24);
             this.radioDueDate.TabIndex = 3;
             this.radioDueDate.TabStop = true;
-            this.radioDueDate.Text = "Due date";
+            this.radioDueDate.Text = "Due date first, then priority";
             this.radioDueDate.UseVisualStyleBackColor = true;
+            this.radioDueDate.CheckedChanged += new System.EventHandler(this.radioDueDate_CheckedChanged);
             // 
             // radioPriority
             // 
             this.radioPriority.AutoSize = true;
             this.radioPriority.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioPriority.Location = new System.Drawing.Point(427, 15);
+            this.radioPriority.Location = new System.Drawing.Point(531, 15);
             this.radioPriority.Name = "radioPriority";
             this.radioPriority.Size = new System.Drawing.Size(211, 24);
             this.radioPriority.TabIndex = 4;
             this.radioPriority.Text = "Priority first, then due date";
             this.radioPriority.UseVisualStyleBackColor = true;
+            this.radioPriority.CheckedChanged += new System.EventHandler(this.radioPriority_CheckedChanged);
             // 
             // groupTaskList
             // 
@@ -833,11 +836,24 @@
             this.btnNewTask.UseVisualStyleBackColor = true;
             this.btnNewTask.Click += new System.EventHandler(this.btnNewTask_Click);
             // 
+            // lblAbout
+            // 
+            this.lblAbout.AutoSize = true;
+            this.lblAbout.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAbout.Location = new System.Drawing.Point(976, 17);
+            this.lblAbout.Name = "lblAbout";
+            this.lblAbout.Size = new System.Drawing.Size(64, 20);
+            this.lblAbout.TabIndex = 7;
+            this.lblAbout.TabStop = true;
+            this.lblAbout.Text = "About...";
+            this.lblAbout.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblAbout_LinkClicked);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1048, 629);
+            this.Controls.Add(this.lblAbout);
             this.Controls.Add(this.groupShortTermPlan);
             this.Controls.Add(this.groupTaskList);
             this.Controls.Add(this.radioPriority);
@@ -917,6 +933,7 @@
         private System.Windows.Forms.DataGridView dgvTasks;
         private System.Windows.Forms.Label lblDueTo;
         private System.Windows.Forms.Label lblDescription;
+        private System.Windows.Forms.LinkLabel lblAbout;
     }
 }
 
