@@ -19,7 +19,13 @@ namespace MyTasks
             this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
             this.labelCopyright.Text = AssemblyCopyright;
             this.labelCompanyName.Text = AssemblyCompany;
-            this.textBoxDescription.Text = AssemblyDescription;
+            //this.textBoxDescription.Text = AssemblyDescription;
+            this.textBoxDescription.Text = $"A (very) simple to do list manager software.{Environment.NewLine}{Environment.NewLine}" +
+                $"Clipboard icon art by Icojam (https://iconarchive.com/artist/icojam.html).{Environment.NewLine}{Environment.NewLine}" +
+                $"Clipboard icon downloaded from:{Environment.NewLine}" +
+                $"https://iconarchive.com/show/onebit-4-icons-by-icojam/clipboard-icon.html.{Environment.NewLine}{Environment.NewLine}" +
+                $"Clipboard icon is used under Creative Commons Public Domain License{Environment.NewLine}" +
+                "(https://creativecommons.org/publicdomain/zero/1.0/).";
         }
 
         #region Assembly Attribute Accessors

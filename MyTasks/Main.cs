@@ -66,8 +66,15 @@ namespace MyTasks
 
         private void UpdateTaskList()
         {
-            dgvTasks.Rows.Clear();            
-            foreach (Task t in taskList)
+            // Check order
+            var orderedList = radioDueDate.Checked ? taskList.OrderBy(t => t.DueDate).ThenByDescending(t => t.Priority) :
+                    taskList.OrderByDescending(t => t.Priority).ThenBy(t => t.DueDate);
+            
+            // Clear datagridview
+            dgvTasks.Rows.Clear();
+            
+            // Populate datagridview again
+            foreach (Task t in orderedList)
             {
                 dgvTasks.Rows.Add();
                 DataGridViewImageCell prioImg = (DataGridViewImageCell)dgvTasks.Rows[dgvTasks.Rows.Count - 1].Cells[0];
