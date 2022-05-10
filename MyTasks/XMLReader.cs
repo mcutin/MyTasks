@@ -193,7 +193,7 @@ namespace MyTasks
             // Updates XMLReader Content to ensure any changes in the
             // XML file are reflected in memory content
             this.Content.RemoveAll();
-            this.Open();
+            //this.Open();
         }
 
         public int FirstFreeID()

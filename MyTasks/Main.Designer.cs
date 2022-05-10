@@ -202,6 +202,7 @@
             this.dgvTasks.TabIndex = 1;
             this.dgvTasks.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvTasks_CellContentDoubleClick);
             this.dgvTasks.Click += new System.EventHandler(this.dgvTasks_Click);
+            this.dgvTasks.DoubleClick += new System.EventHandler(this.dgvTasks_DoubleClick);
             // 
             // groupShortTermPlan
             // 

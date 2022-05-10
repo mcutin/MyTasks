@@ -57,11 +57,13 @@ namespace MyTasks
             dgvTasks.Columns.Add(new DataGridViewImageColumn()); // Col 0 - Priority image
             dgvTasks.Columns.Add(new DataGridViewTextBoxColumn()); // Col 1 - Due date
             dgvTasks.Columns.Add(new DataGridViewTextBoxColumn()); // Col 2 - Description
+            dgvTasks.Columns.Add(new DataGridViewTextBoxColumn()); // Col 3 - ID
 
             dgvTasks.Columns[0].Width = 25;
             dgvTasks.Columns[1].Width = 100;
             dgvTasks.Columns[2].Width = dgvTasks.Width - dgvTasks.Margin.All -
                 dgvTasks.Columns[0].Width - dgvTasks.Columns[1].Width;
+            dgvTasks.Columns[3].Visible = false;
         }
 
         private void UpdateTaskList()
@@ -80,6 +82,7 @@ namespace MyTasks
                 DataGridViewImageCell prioImg = (DataGridViewImageCell)dgvTasks.Rows[dgvTasks.Rows.Count - 1].Cells[0];
                 DataGridViewTextBoxCell date = (DataGridViewTextBoxCell)dgvTasks.Rows[dgvTasks.Rows.Count - 1].Cells[1];
                 DataGridViewTextBoxCell description = (DataGridViewTextBoxCell)dgvTasks.Rows[dgvTasks.Rows.Count - 1].Cells[2];
+                DataGridViewTextBoxCell id = (DataGridViewTextBoxCell)dgvTasks.Rows[dgvTasks.Rows.Count - 1].Cells[3];
                 switch (t.Priority)
                 {
                     case 0:
@@ -97,6 +100,7 @@ namespace MyTasks
                 }
                 date.Value = t.DueDate;
                 description.Value = t.Description;
+                id.Value = t.ID;
             }
         }
 
@@ -383,6 +387,7 @@ namespace MyTasks
             NewTask newTask = new NewTask();
             newTask.ShowDialog();
             tasks.Update();
+            LoadTasks();
             UpdateStatusBar();
             FormatTaskList();
             UpdateTaskList();
@@ -649,6 +654,38 @@ namespace MyTasks
         {
             About aboutDlg = new About();
             aboutDlg.ShowDialog();
+        }
+
+        private void dgvTasks_DoubleClick(object sender, EventArgs e)
+        {
+            Int32.TryParse(dgvTasks.SelectedCells[3].Value.ToString(), out int id);
+            string description = dgvTasks.SelectedCells[2].Value.ToString();
+            string date = dgvTasks.SelectedCells[1].Value.ToString();
+            Int32.TryParse(dgvTasks.SelectedCells[0].Value.ToString(), out int prio);
+            string priority;
+            switch (prio)
+            {
+                case 0:
+                    priority = "Low";
+                    break;
+                case 1:
+                    priority = "Normal";
+                    break;
+                case 2:
+                    priority = "High";
+                    break;
+                default:
+                    priority = "Low";
+                    break;
+            }
+            EditTask editTask = new EditTask(id, description, date, priority);
+            editTask.ShowDialog();
+            tasks.Update();
+            LoadTasks();
+            UpdateStatusBar();
+            FormatTaskList();
+            UpdateTaskList();
+            UpdateShortTermPlan();
         }
     }
 }

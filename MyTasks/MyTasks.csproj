@@ -53,6 +53,12 @@
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
     <Compile Include="Day.cs" />
+    <Compile Include="EditTask.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditTask.Designer.cs">
+      <DependentUpon>EditTask.cs</DependentUpon>
+    </Compile>
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -72,6 +78,9 @@
     <Compile Include="XMLReader.cs" />
     <EmbeddedResource Include="About.resx">
       <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditTask.resx">
+      <DependentUpon>EditTask.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
