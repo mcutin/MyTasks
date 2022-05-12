@@ -22,6 +22,21 @@ namespace MyTasks
             DateTime date = DateTime.ParseExact(dueDate, "dd/MM/yyyy hh:mm:ss", null);
             taskDueDate.Value = date;
             taskPriority.Text = priority;
+            //switch (priority)
+            //{
+            //    case "Low":
+            //        taskPriority.SelectedIndex = 0;
+            //        break;
+            //    case "Normal":
+            //        taskPriority.SelectedIndex = 1;
+            //        break;
+            //    case "High":
+            //        taskPriority.SelectedIndex = 2;
+            //        break;
+            //    default:
+            //        taskPriority.SelectedIndex = 0;
+            //        break;
+            //}
         }
     }
 }
