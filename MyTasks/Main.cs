@@ -20,11 +20,27 @@ namespace MyTasks
     {
         XMLReader tasks = new XMLReader("tasks.xml");
         List<Task> taskList = new List<Task>();
+        PlannerDay[,] shortTerm = new PlannerDay[7, 5];
 
         // Constructor
         public Main()
         {
             InitializeComponent();
+            
+            // Initilalize short plan array
+            for (int col = 0; col < 7; col++)
+            {
+                for (int row = 0; row < 5; row++)
+                {
+                    // Instatiates all necessary PlannerDay objects
+                    shortTerm[col, row] = new PlannerDay();
+                    // Add each object to groupShortTermPlan
+                    groupShortTermPlan.Controls.Add(shortTerm[col, row]);
+                    // Define each object location inside groupShortTermPlan
+                    shortTerm[col, row].Location = new Point(15 + col * shortTerm[col, row].Width,
+                                                         65 + row * shortTerm[col, row].Height);
+                }
+            }
         }
 
         // Methods
@@ -34,8 +50,7 @@ namespace MyTasks
             tasks.Open();
 
             // Populate taskList with tasks loaded from XML file
-            IEnumerable<XElement> allTasks = from t in tasks.Content.Descendants("task")
-                                             select t;
+            IEnumerable<XElement> allTasks = from t in tasks.Content.Descendants("task") select t;
             foreach (XElement task in allTasks)
             {
                 Int32.TryParse(task.Element("id").Value, out int tempID);
@@ -106,8 +121,8 @@ namespace MyTasks
                 description.Value = t.Description;
                 id.Value = t.ID;
                 prioNum.Value = t.Priority;
-                HighlightDay();
             }
+            HighlightDay(DateTime.ParseExact(dgvTasks.SelectedRows[0].Cells[1].Value.ToString(), "dd/MM/yyyy HH:mm:ss", null));
         }
 
         private void UpdateStatusBar()
@@ -138,16 +153,6 @@ namespace MyTasks
 
         private void UpdateShortTermPlan()
         {
-            // Initilalize short plan array
-            Day[,] shortTerm = new Day[5, 7];
-            for (int i = 0; i < 5; i++)
-            {
-                for (int j = 0; j < 7; j++)
-                {
-                    shortTerm[i, j] = new Day();
-                }
-            }
-
             // Clear all days in short term plan before updating
             ClearAllCalendar();
 
@@ -167,15 +172,15 @@ namespace MyTasks
 
             // Dates needed to properly update groupShortTermPlan.Text
             DateTime lastDate;
-
+            
             for (int row = 0; row <= 4; row++)
             {
                 for (int col = 0; col <= 6; col++)
                 {
-                    if (shortTerm[row, col].Enabled)
+                    if (shortTerm[col, row].Visible)
                     {
                         // Fill in date of day
-                        shortTerm[row, col].DayDate = date;
+                        shortTerm[col, row].Date = date;
 
                         // Fill in tasks per priority
                         // Low
@@ -183,31 +188,30 @@ namespace MyTasks
                                                    where t.Priority == 0 && t.DueDate == date
                                                    select t;
 
-                        shortTerm[row, col].LowTasks = lp.Count();
+                        shortTerm[col, row].Low = lp.Count();
                         // Normal
                         IEnumerable<Task> np = from t in taskList
                                                    where t.Priority == 1 && t.DueDate == date
                                                    select t;
 
-                        shortTerm[row, col].NormalTasks = np.Count();
+                        shortTerm[col, row].Normal = np.Count();
                         // High
                         IEnumerable<Task> hp = from t in taskList
                                                    where t.Priority == 2 && t.DueDate == date
                                                    select t;
 
-                        shortTerm[row, col].HighTasks = hp.Count();
+                        shortTerm[col, row].High = hp.Count();
 
                         // Increment date
                         date = date.AddDays(1);
                     }
                 }
             }
-
-            // Update all days in short term plan
-            UpdateAllDays(shortTerm);
+            //DateTime selDate = DateTime.ParseExact(dgvTasks.SelectedRows[0].Cells[1].Value.ToString(), "dd/MM/yyyy HH:mm:ss", null);
+            HighlightDay(DateTime.ParseExact(dgvTasks.SelectedRows[0].Cells[1].Value.ToString(), "dd/MM/yyyy HH:mm:ss", null));
 
             // Update groupShortTermPlan Text property
-            lastDate = shortTerm[4, 6].DayDate;            
+            lastDate = shortTerm[6, 4].Date;            
             groupShortTermPlan.Text = "Short term plan - " + ShortTermPeriod(date, lastDate);
         }
 
@@ -234,7 +238,7 @@ namespace MyTasks
             return monthST;
         }
 
-        private void UpdateCalendar(Day[,] shortTerm, DateTime oldestDate)
+        private void UpdateCalendar(PlannerDay[,] shortTerm, DateTime oldestDate)
         {
             // Current month is based on oldest task
             // Check day of the week of oldest task due date
@@ -243,186 +247,79 @@ namespace MyTasks
             switch (dow)
             {
                 case DayOfWeek.Monday:
-                    shortTerm[0, 0].Enabled = false;
-                    shortTerm[0, 1].Enabled = true;
-                    shortTerm[0, 2].Enabled = true;
-                    shortTerm[0, 3].Enabled = true;
-                    shortTerm[0, 4].Enabled = true;
-                    shortTerm[0, 5].Enabled = true;
-                    shortTerm[0, 6].Enabled = true;
+                    shortTerm[0, 0].Visible = false;
+                    shortTerm[0, 1].Visible = true;
+                    shortTerm[0, 2].Visible = true;
+                    shortTerm[0, 3].Visible = true;
+                    shortTerm[0, 4].Visible = true;
+                    shortTerm[0, 5].Visible = true;
+                    shortTerm[0, 6].Visible = true;
                     break;
                 case DayOfWeek.Tuesday:
-                    shortTerm[0, 0].Enabled = false;
-                    shortTerm[0, 1].Enabled = false;
-                    shortTerm[0, 2].Enabled = true;
-                    shortTerm[0, 3].Enabled = true;
-                    shortTerm[0, 4].Enabled = true;
-                    shortTerm[0, 5].Enabled = true;
-                    shortTerm[0, 6].Enabled = true;
+                    shortTerm[0, 0].Visible = false;
+                    shortTerm[1, 0].Visible = false;
+                    shortTerm[2, 0].Visible = true;
+                    shortTerm[3, 0].Visible = true;
+                    shortTerm[4, 0].Visible = true;
+                    shortTerm[5, 0].Visible = true;
+                    shortTerm[6, 0].Visible = true;
                     break;
                 case DayOfWeek.Wednesday:
-                    shortTerm[0, 0].Enabled = false;
-                    shortTerm[0, 1].Enabled = false;
-                    shortTerm[0, 2].Enabled = false;
-                    shortTerm[0, 3].Enabled = true;
-                    shortTerm[0, 4].Enabled = true;
-                    shortTerm[0, 5].Enabled = true;
-                    shortTerm[0, 6].Enabled = true;
+                    shortTerm[0, 0].Visible = false;
+                    shortTerm[1, 0].Visible = false;
+                    shortTerm[2, 0].Visible = false;
+                    shortTerm[3, 0].Visible = true;
+                    shortTerm[4, 0].Visible = true;
+                    shortTerm[5, 0].Visible = true;
+                    shortTerm[6, 0].Visible = true;
                     break;
                 case DayOfWeek.Thursday:
-                    shortTerm[0, 0].Enabled = false;
-                    shortTerm[0, 1].Enabled = false;
-                    shortTerm[0, 2].Enabled = false;
-                    shortTerm[0, 3].Enabled = false;
-                    shortTerm[0, 4].Enabled = true;
-                    shortTerm[0, 5].Enabled = true;
-                    shortTerm[0, 6].Enabled = true;
+                    shortTerm[0, 0].Visible = false;
+                    shortTerm[1, 0].Visible = false;
+                    shortTerm[2, 0].Visible = false;
+                    shortTerm[3, 0].Visible = false;
+                    shortTerm[4, 0].Visible = true;
+                    shortTerm[5, 0].Visible = true;
+                    shortTerm[6, 0].Visible = true;
                     break;
                 case DayOfWeek.Friday:
-                    shortTerm[0, 0].Enabled = false;
-                    shortTerm[0, 1].Enabled = false;
-                    shortTerm[0, 2].Enabled = false;
-                    shortTerm[0, 3].Enabled = false;
-                    shortTerm[0, 4].Enabled = false;
-                    shortTerm[0, 5].Enabled = true;
-                    shortTerm[0, 6].Enabled = true;
+                    shortTerm[0, 0].Visible = false;
+                    shortTerm[1, 0].Visible = false;
+                    shortTerm[2, 0].Visible = false;
+                    shortTerm[3, 0].Visible = false;
+                    shortTerm[4, 0].Visible = false;
+                    shortTerm[5, 0].Visible = true;
+                    shortTerm[6, 0].Visible = true;
                     break;
                 case DayOfWeek.Saturday:
-                    shortTerm[0, 0].Enabled = false;
-                    shortTerm[0, 1].Enabled = false;
-                    shortTerm[0, 2].Enabled = false;
-                    shortTerm[0, 3].Enabled = false;
-                    shortTerm[0, 4].Enabled = false;
-                    shortTerm[0, 5].Enabled = false;
-                    shortTerm[0, 6].Enabled = true;
+                    shortTerm[0, 0].Visible = false;
+                    shortTerm[1, 0].Visible = false;
+                    shortTerm[2, 0].Visible = false;
+                    shortTerm[3, 0].Visible = false;
+                    shortTerm[4, 0].Visible = false;
+                    shortTerm[5, 0].Visible = false;
+                    shortTerm[6, 0].Visible = true;
                     break;
                 default:
-                    shortTerm[0, 0].Enabled = true;
-                    shortTerm[0, 1].Enabled = true;
-                    shortTerm[0, 2].Enabled = true;
-                    shortTerm[0, 3].Enabled = true;
-                    shortTerm[0, 4].Enabled = true;
-                    shortTerm[0, 5].Enabled = true;
-                    shortTerm[0, 6].Enabled = true;
+                    shortTerm[0, 0].Visible = true;
+                    shortTerm[1, 0].Visible = true;
+                    shortTerm[2, 0].Visible = true;
+                    shortTerm[3, 0].Visible = true;
+                    shortTerm[4, 0].Visible = true;
+                    shortTerm[5, 0].Visible = true;
+                    shortTerm[6, 0].Visible = true;
                     break;
             }
-        }
-
-        private void UpdateDay(RichTextBox day, Day[,] shortTerm)
-        {
-            Int32.TryParse(day.Name.Substring(day.Name.Length - 1, 1), out int d);
-            Int32.TryParse(day.Name.Substring(day.Name.Length - 2, 1), out int w);
-            d--;
-            w--;
-
-            if (shortTerm[w, d].Enabled)
-            {
-                // Reflect new data on each rtfDay object
-                day.AppendText(shortTerm[w, d].DayDate.Day.ToString(), Color.Black,
-                    FontStyle.Bold, HorizontalAlignment.Right);
-                if (shortTerm[w, d].HighTasks > 0)
-                {
-                    day.AppendText(shortTerm[w, d].HighTasks.ToString(), Color.Red);
-                }
-                else
-                {
-                    day.AppendText(Environment.NewLine);
-                }
-                if (shortTerm[w, d].NormalTasks > 0)
-                {
-                    day.AppendText(shortTerm[w, d].NormalTasks.ToString(), Color.Green);
-                }
-                else
-                {
-                    day.AppendText(Environment.NewLine);
-                }
-                if (shortTerm[w, d].LowTasks > 0)
-                {
-                    day.AppendText(shortTerm[w, d].LowTasks.ToString(), Color.Blue);
-                }
-                else
-                {
-                    day.AppendText(Environment.NewLine);
-                    day.AppendText(Environment.NewLine);
-                }
-                day.AppendText(shortTerm[w, d].DayDate.ToString("dd/MM/yyyy"), Color.White,
-                    FontStyle.Regular, HorizontalAlignment.Left, false);
-            }
-            else
-            {
-                day.Text = "          "; // To avoid exception in dgvTasks_Click
-                day.Enabled = false;
-            }
-        }
-
-        private void UpdateDay2(PlannerDay day, Day[,] shortTerm)
-        {
-            Int32.TryParse(day.Name.Substring(day.Name.Length - 1, 1), out int d);
-            Int32.TryParse(day.Name.Substring(day.Name.Length - 2, 1), out int w);
-            d--;
-            w--;
-
-            if (shortTerm[w, d].Enabled)
-            {
-                // Reflect new data on each rtfDay object
-                day.Date = shortTerm[w, d].DayDate;
-                if (shortTerm[w, d].HighTasks > 0)
-                {
-                    day.High = shortTerm[w, d].HighTasks;
-                }
-                else
-                {
-                    day.High = 0;
-                }
-                if (shortTerm[w, d].NormalTasks > 0)
-                {
-                    day.Normal = shortTerm[w, d].NormalTasks;
-                }
-                else
-                {
-                    day.Normal = 0;
-                }
-                if (shortTerm[w, d].LowTasks > 0)
-                {
-                    day.Low = shortTerm[w, d].LowTasks;
-                }
-                else
-                {
-                    day.Low = 0;
-                }
-                //day.AppendText(shortTerm[w, d].DayDate.ToString("dd/MM/yyyy"), Color.White,
-                    //FontStyle.Regular, HorizontalAlignment.Left, false);
-            }
-            //else
-            //{
-            //    day.Text = "          "; // To avoid exception in dgvTasks_Click
-            //    day.Enabled = false;
-            //}
-        }
-
-        private void UpdateAllDays(Day [,] shortTerm)
-        {
-            // Create collection with all the Rich text boxes in short term plan
-            Control.ControlCollection ShortTermDays = groupShortTermPlan.Controls;
-
-            this.SuspendLayout();
-            foreach (Control ctl in ShortTermDays)
-            {
-                if (ctl is RichTextBox)
-                    UpdateDay((RichTextBox)ctl, shortTerm);
-            }
-            this.ResumeLayout();
         }
 
         private void ClearAllCalendar()
         {
-            // Create collection with all the Rich text boxes in short term plan
-            Control.ControlCollection ShortTermDays = groupShortTermPlan.Controls;
-
-            foreach (Control ctl in ShortTermDays)
+            for(int col = 0; col < 7; col++)
             {
-                if (ctl is RichTextBox)
-                    ctl.Text = "";
+                for(int row = 0; row < 5; row++)
+                {
+                    shortTerm[col, row].Clear();
+                }
             }
         }
 
@@ -443,219 +340,10 @@ namespace MyTasks
             LoadTasks();
         }
 
-        private void rtfDay11_Enter(object sender, EventArgs e)
-        {
-            //rtfDay11.Enabled = false;
-            //rtfDay11.Enabled = true;
-        }
-
-        private void rtfDay12_Enter(object sender, EventArgs e)
-        {
-            //rtfDay12.Enabled = false;
-            //rtfDay12.Enabled = true;
-        }
-
-        private void rtfDay13_Enter(object sender, EventArgs e)
-        {
-            //rtfDay13.Enabled = false;
-            //rtfDay13.Enabled = true;
-        }
-
-        private void rtfDay14_Enter(object sender, EventArgs e)
-        {
-            //rtfDay14.Enabled = false;
-            //rtfDay14.Enabled = true;
-        }
-
-        private void rtfDay15_Enter(object sender, EventArgs e)
-        {
-            //rtfDay15.Enabled = false;
-            //rtfDay15.Enabled = true;
-        }
-
-        private void rtfDay16_Enter(object sender, EventArgs e)
-        {
-            //rtfDay16.Enabled = false;
-            //rtfDay16.Enabled = true;
-        }
-
-        private void rtfDay17_Enter(object sender, EventArgs e)
-        {
-            //rtfDay17.Enabled = false;
-            //rtfDay17.Enabled = true;
-        }
-
-        private void rtfDay21_Enter(object sender, EventArgs e)
-        {
-            //rtfDay21.Enabled = false;
-            //rtfDay21.Enabled = true;
-        }
-
-        private void rtfDay22_Enter(object sender, EventArgs e)
-        {
-            //rtfDay22.Enabled = false;
-            //rtfDay22.Enabled = true;
-        }
-
-        private void rtfDay23_Enter(object sender, EventArgs e)
-        {
-            //rtfDay23.Enabled = false;
-            //rtfDay23.Enabled = true;
-        }
-
-        private void rtfDay24_Enter(object sender, EventArgs e)
-        {
-            //rtfDay24.Enabled = false;
-            //rtfDay24.Enabled = true;
-        }
-
-        private void rtfDay25_Enter(object sender, EventArgs e)
-        {
-            //rtfDay25.Enabled = false;
-            //rtfDay25.Enabled = true;
-        }
-
-        private void rtfDay26_Enter(object sender, EventArgs e)
-        {
-            //rtfDay26.Enabled = false;
-            //rtfDay26.Enabled = true;
-        }
-
-        private void rtfDay27_Enter(object sender, EventArgs e)
-        {
-            //rtfDay27.Enabled = false;
-            //rtfDay27.Enabled = true;
-        }
-
-        private void rtfDay31_Enter(object sender, EventArgs e)
-        {
-            //rtfDay31.Enabled = false;
-            //rtfDay31.Enabled = true;
-        }
-
-        private void rtfDay32_Enter(object sender, EventArgs e)
-        {
-            //rtfDay32.Enabled = false;
-            //rtfDay32.Enabled = true;
-        }
-
-        private void rtfDay33_Enter(object sender, EventArgs e)
-        {
-            //rtfDay33.Enabled = false;
-            //rtfDay33.Enabled = true;
-        }
-
-        private void rtfDay34_Enter(object sender, EventArgs e)
-        {
-            //rtfDay34.Enabled = false;
-            //rtfDay34.Enabled = true;
-        }
-
-        private void rtfDay35_Enter(object sender, EventArgs e)
-        {
-            //rtfDay35.Enabled = false;
-            //rtfDay35.Enabled = true;
-        }
-
-        private void rtfDay36_Enter(object sender, EventArgs e)
-        {
-            //rtfDay36.Enabled = false;
-            //rtfDay36.Enabled = true;
-        }
-
-        private void rtfDay37_Enter(object sender, EventArgs e)
-        {
-            //rtfDay37.Enabled = false;
-            //rtfDay37.Enabled = true;
-        }
-
-        private void rtfDay41_Enter(object sender, EventArgs e)
-        {
-            //rtfDay41.Enabled = false;
-            //rtfDay41.Enabled = true;
-        }
-
-        private void rtfDay42_Enter(object sender, EventArgs e)
-        {
-            //rtfDay42.Enabled = false;
-            //rtfDay42.Enabled = true;
-        }
-
-        private void rtfDay43_Enter(object sender, EventArgs e)
-        {
-            //rtfDay43.Enabled = false;
-            //rtfDay43.Enabled = true;
-        }
-
-        private void rtfDay44_Enter(object sender, EventArgs e)
-        {
-            //rtfDay44.Enabled = false;
-            //rtfDay44.Enabled = true;
-        }
-
-        private void rtfDay45_Enter(object sender, EventArgs e)
-        {
-            //rtfDay45.Enabled = false;
-            //rtfDay45.Enabled = true;
-        }
-
-        private void rtfDay46_Enter(object sender, EventArgs e)
-        {
-            //rtfDay46.Enabled = false;
-            //rtfDay46.Enabled = true;
-        }
-
-        private void rtfDay47_Enter(object sender, EventArgs e)
-        {
-            //rtfDay47.Enabled = false;
-            //rtfDay47.Enabled = true;
-        }
-
-        private void rtfDay51_Enter(object sender, EventArgs e)
-        {
-            //rtfDay51.Enabled = false;
-            //rtfDay51.Enabled = true;
-        }
-
-        private void rtfDay52_Enter(object sender, EventArgs e)
-        {
-            //rtfDay52.Enabled = false;
-            //rtfDay52.Enabled = true;
-        }
-
-        private void rtfDay53_Enter(object sender, EventArgs e)
-        {
-            //rtfDay53.Enabled = false;
-            //rtfDay53.Enabled = true;
-        }
-
-        private void rtfDay54_Enter(object sender, EventArgs e)
-        {
-            //    rtfDay54.Enabled = false;
-            //    rtfDay54.Enabled = true;
-        }
-
-        private void rtfDay55_Enter(object sender, EventArgs e)
-        {
-            //rtfDay55.Enabled = false;
-            //rtfDay55.Enabled = true;
-        }
-
-        private void rtfDay56_Enter(object sender, EventArgs e)
-        {
-            //rtfDay56.Enabled = false;
-            //rtfDay56.Enabled = true;
-        }
-
-        private void rtfDay57_Enter(object sender, EventArgs e)
-        {
-            //rtfDay57.Enabled = false;
-            //rtfDay57.Enabled = true;
-        }
-
         private void dgvTasks_Click(object sender, EventArgs e)
         {
-            HighlightDay();
+            DateTime selDate = DateTime.ParseExact(dgvTasks.SelectedRows[0].Cells[1].Value.ToString(), "dd/MM/yyyy HH:mm:ss", null);
+            HighlightDay(selDate);
         }
 
         private void radioDueDate_CheckedChanged(object sender, EventArgs e)
@@ -712,67 +400,20 @@ namespace MyTasks
             UpdateShortTermPlan();
         }
 
-        private void HighlightDay()
+        private void HighlightDay(DateTime date)
         {
-            // Create collection with all the Rich text boxes in short term plan
-            Control.ControlCollection ShortTermDays = groupShortTermPlan.Controls;
-
-            if(dgvTasks.SelectedRows.Count > 0)
+            for (int col = 0; col < 7; col++)
             {
-                string selectedTaskDate = dgvTasks.SelectedRows[0].Cells[1].Value.ToString();
-                selectedTaskDate = selectedTaskDate.Substring(0, 10);
-
-                foreach (Control ctl in ShortTermDays)
+                for (int row = 0; row < 5; row++)
                 {
-                    if (ctl is RichTextBox && ctl.Text.Length >= 10)
+                    if(shortTerm[col, row].Date == date)
                     {
-                        if (selectedTaskDate == ctl.Text.Substring(ctl.Text.Length - 10))
-                        {
-                            ctl.BackColor = Color.LemonChiffon;
-                        }
-                        else
-                        {
-                            ctl.BackColor = Color.White;
-                        }
-
-                    }
-                }
-            }
-        }
-
-        private void HighlightDay2()
-        {
-            // Create collection with all the PlannerDays in short term plan
-            Control.ControlCollection ShortTermDays = groupShortTermPlan.Controls;
-
-            if (dgvTasks.SelectedRows.Count > 0)
-            {
-                string selectedTaskDate = dgvTasks.SelectedRows[0].Cells[1].Value.ToString();
-                selectedTaskDate = selectedTaskDate.Substring(0, 10);
-                DateTime refDate = DateTime.ParseExact(selectedTaskDate, "dd/MM/yyyy", null);
-
-                foreach (Control ctl in ShortTermDays)
-                {
-                    if (!(ctl is PlannerDay))
-                    {
-                        ShortTermDays.Remove(ctl);
-                        Console.WriteLine(ctl.Name);
-                    }
-                }
-                foreach (PlannerDay ctl in ShortTermDays)
-                {
-                    //if (ctl is PlannerDay)
-                    //{
-                    if (refDate == ctl.Date)
-                    {
-                        ctl.Highlight = true;
-                        break;
+                        shortTerm[col, row].Highlight = true;
                     }
                     else
                     {
-                        ctl.Highlight = false;
+                        shortTerm[col, row].Highlight = false;
                     }
-                    //}
                 }
             }
         }

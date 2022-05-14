@@ -52,7 +52,6 @@
     <Compile Include="About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
-    <Compile Include="Day.cs" />
     <Compile Include="EditTask.cs">
       <SubType>Form</SubType>
     </Compile>
