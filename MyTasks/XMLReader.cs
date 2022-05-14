@@ -9,16 +9,16 @@ using System.Xml.Linq;
 
 namespace MyTasks
 {
-    internal class XMLReader
+    public class XMLReader
     {
         // Fields
-        private string file;
-        private XElement content;
-        private DateTime oldestDate;
-        private int taskCount;
-        private int taskLowCount;
-        private int taskHighCount;
-        private int taskNormalCount;
+        protected string file;
+        protected XDocument content;
+        protected DateTime oldestDate;
+        protected int taskCount;
+        protected int taskLowCount;
+        protected int taskHighCount;
+        protected int taskNormalCount;
 
         // Constructor
         public XMLReader(string xmlFile)
@@ -40,7 +40,7 @@ namespace MyTasks
             }
         }
 
-        public XElement Content
+        public XDocument Content
         {
             get
             {
@@ -112,32 +112,31 @@ namespace MyTasks
             // Returns the amount of tasks according to the priority informed
             if (p >= 0 && p <= 2)
             {
-                IEnumerable<XElement> prioTask = from t in this.Content.Elements("task")
+                IEnumerable<XElement> prioTask = from t in this.Content.Descendants("task")
                                                  where (int)t.Element("priority") == p
                                                  select t;
                 int counter = 0;
                 foreach (var task in prioTask)
                 {
-                    string prio;
-                    switch (Int32.Parse(task.Element("priority").Value))
-                    {
-                        case 0:
-                            prio = "Low";
-                            break;
-                        case 1:
-                            prio = "Normal";
-                            break;
-                        case 2:
-                            prio = "High";
-                            break;
-                        default:
-                            prio = "N/D";
-                            break;
-                    }
-                    //Debug.WriteLine("Task ID: " + task.Element("id").Value.ToString() +
-                    //    ", " + prio + " priority");
+                    //string prio;
+                    //switch (Int32.Parse(task.Element("priority").Value))
+                    //{
+                    //    case 0:
+                    //        prio = "Low";
+                    //        break;
+                    //    case 1:
+                    //        prio = "Normal";
+                    //        break;
+                    //    case 2:
+                    //        prio = "High";
+                    //        break;
+                    //    default:
+                    //        prio = "N/D";
+                    //        break;
+                    //}
                     counter++;
                 }
+                counter = prioTask.Count();
                 return counter;
             }
             else
@@ -150,7 +149,7 @@ namespace MyTasks
         {
             // Returns the oldest task date
             DateTime oldest = DateTime.MaxValue;
-            foreach (var task in this.Content.Elements())
+            foreach (var task in this.Content.Descendants("task"))
             {
                 DateTime taskDate = DateTime.ParseExact(task.Element("dueDate").Value, 
                     "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
@@ -166,7 +165,7 @@ namespace MyTasks
         {
             try
             {
-                this.Content = XElement.Load(this.File);
+                this.Content = XDocument.Load(this.File);
                 this.oldestDate = OldestTask();
                 this.taskCount = UpdateTaskCount();
                 this.taskHighCount = PriorityTaskCount(2);
@@ -188,12 +187,19 @@ namespace MyTasks
             return true;
         }
 
+        public bool Save()
+        {
+            //this.Content = XElement.Load(this.File);
+            this.Content.Save(this.File);
+            return true;
+        }
+
         public void Update()
         {
             // Updates XMLReader Content to ensure any changes in the
             // XML file are reflected in memory content
-            this.Content.RemoveAll();
-            //this.Open();
+            //this.Content.RemoveAll();
+            this.Open();
         }
 
         public int FirstFreeID()

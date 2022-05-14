@@ -18,7 +18,7 @@ namespace MyTasks
 {
     public partial class Main : Form
     {
-        XMLReader tasks = new XMLReader("tasks.xml");
+        public XMLReader tasks = new XMLReader("tasks.xml");
         List<Task> taskList = new List<Task>();
         PlannerDay[,] shortTerm = new PlannerDay[7, 5];
 
@@ -390,7 +390,7 @@ namespace MyTasks
                     priority = "Low";
                     break;
             }
-            EditTask editTask = new EditTask(id, description, date, priority);
+            EditTask editTask = new EditTask(id, description, date, priority, tasks);
             editTask.ShowDialog();
             tasks.Update();
             LoadTasks();

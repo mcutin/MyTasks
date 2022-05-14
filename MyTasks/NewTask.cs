@@ -66,12 +66,12 @@ namespace MyTasks
             {
                 newPriority = 2;
             }
-            taskDB.Content.Add(new XElement("task", 
+            taskDB.Content.Root.Add(new XElement("task", 
                 new XElement("id", newID.ToString()),
                 new XElement("priority", newPriority.ToString()),
                 new XElement("dueDate", taskDueDate.Value.ToString("dd/MM/yyyy")),
                 new XElement("description", taskDescription.Text)));
-            taskDB.Content.Save("tasks.xml");
+            taskDB.Save();
         }
     }
 }
