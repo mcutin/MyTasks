@@ -71,6 +71,12 @@
     <Compile Include="NewTask.Designer.cs">
       <DependentUpon>NewTask.cs</DependentUpon>
     </Compile>
+    <Compile Include="PlannerDay.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PlannerDay.Designer.cs">
+      <DependentUpon>PlannerDay.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RichTextBoxExtensions.cs" />
@@ -87,6 +93,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="NewTask.resx">
       <DependentUpon>NewTask.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PlannerDay.resx">
+      <DependentUpon>PlannerDay.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

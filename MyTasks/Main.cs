@@ -355,6 +355,51 @@ namespace MyTasks
             }
         }
 
+        private void UpdateDay2(PlannerDay day, Day[,] shortTerm)
+        {
+            Int32.TryParse(day.Name.Substring(day.Name.Length - 1, 1), out int d);
+            Int32.TryParse(day.Name.Substring(day.Name.Length - 2, 1), out int w);
+            d--;
+            w--;
+
+            if (shortTerm[w, d].Enabled)
+            {
+                // Reflect new data on each rtfDay object
+                day.Date = shortTerm[w, d].DayDate;
+                if (shortTerm[w, d].HighTasks > 0)
+                {
+                    day.High = shortTerm[w, d].HighTasks;
+                }
+                else
+                {
+                    day.High = 0;
+                }
+                if (shortTerm[w, d].NormalTasks > 0)
+                {
+                    day.Normal = shortTerm[w, d].NormalTasks;
+                }
+                else
+                {
+                    day.Normal = 0;
+                }
+                if (shortTerm[w, d].LowTasks > 0)
+                {
+                    day.Low = shortTerm[w, d].LowTasks;
+                }
+                else
+                {
+                    day.Low = 0;
+                }
+                //day.AppendText(shortTerm[w, d].DayDate.ToString("dd/MM/yyyy"), Color.White,
+                    //FontStyle.Regular, HorizontalAlignment.Left, false);
+            }
+            //else
+            //{
+            //    day.Text = "          "; // To avoid exception in dgvTasks_Click
+            //    day.Enabled = false;
+            //}
+        }
+
         private void UpdateAllDays(Day [,] shortTerm)
         {
             // Create collection with all the Rich text boxes in short term plan
@@ -691,6 +736,43 @@ namespace MyTasks
                         }
 
                     }
+                }
+            }
+        }
+
+        private void HighlightDay2()
+        {
+            // Create collection with all the PlannerDays in short term plan
+            Control.ControlCollection ShortTermDays = groupShortTermPlan.Controls;
+
+            if (dgvTasks.SelectedRows.Count > 0)
+            {
+                string selectedTaskDate = dgvTasks.SelectedRows[0].Cells[1].Value.ToString();
+                selectedTaskDate = selectedTaskDate.Substring(0, 10);
+                DateTime refDate = DateTime.ParseExact(selectedTaskDate, "dd/MM/yyyy", null);
+
+                foreach (Control ctl in ShortTermDays)
+                {
+                    if (!(ctl is PlannerDay))
+                    {
+                        ShortTermDays.Remove(ctl);
+                        Console.WriteLine(ctl.Name);
+                    }
+                }
+                foreach (PlannerDay ctl in ShortTermDays)
+                {
+                    //if (ctl is PlannerDay)
+                    //{
+                    if (refDate == ctl.Date)
+                    {
+                        ctl.Highlight = true;
+                        break;
+                    }
+                    else
+                    {
+                        ctl.Highlight = false;
+                    }
+                    //}
                 }
             }
         }
