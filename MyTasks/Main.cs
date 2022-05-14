@@ -371,6 +371,11 @@ namespace MyTasks
 
         private void dgvTasks_DoubleClick(object sender, EventArgs e)
         {
+            EditTask(dgvTasks);
+        }
+
+        private void EditTask(DataGridView dgv)
+        {
             Int32.TryParse(dgvTasks.SelectedCells[3].Value.ToString(), out int id);
             string description = dgvTasks.SelectedCells[2].Value.ToString();
             string date = dgvTasks.SelectedCells[1].Value.ToString();
@@ -416,6 +421,36 @@ namespace MyTasks
                         shortTerm[col, row].Highlight = false;
                     }
                 }
+            }
+        }
+
+        private void dgvTasks_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            // Based on code from https://stackoverflow.com/a/9820529/5952443
+            if (e.Button == MouseButtons.Right)
+            {
+                int rowSelected = e.RowIndex;
+                if (e.RowIndex != -1)
+                {
+                    this.dgvTasks.ClearSelection();
+                    this.dgvTasks.Rows[rowSelected].Selected = true;
+                }
+                // you now have the selected row with the context menu showing for the user to delete etc.
+            }
+        }
+
+        private void dgvContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            ToolStripItem menuOption = e.ClickedItem;
+            if(menuOption.Name == "completeTask")
+            {
+                MessageBox.Show("Complete task not implemented yet.", "Information", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else if(menuOption.Name == "editTask")
+            {
+                //message = "Edit task not implemented yet.";
+                EditTask(dgvTasks);
             }
         }
     }

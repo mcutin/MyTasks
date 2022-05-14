@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.statusBarLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -46,12 +47,16 @@
             this.lblTuesday = new System.Windows.Forms.Label();
             this.lblMonday = new System.Windows.Forms.Label();
             this.lblSunday = new System.Windows.Forms.Label();
-            this.btnNewTask = new System.Windows.Forms.Button();
             this.lblAbout = new System.Windows.Forms.LinkLabel();
+            this.dgvContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.completeTask = new System.Windows.Forms.ToolStripMenuItem();
+            this.editTask = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnNewTask = new System.Windows.Forms.Button();
             this.statusBar.SuspendLayout();
             this.groupTaskList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTasks)).BeginInit();
             this.groupShortTermPlan.SuspendLayout();
+            this.dgvContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusBar
@@ -157,6 +162,7 @@
             this.dgvTasks.MultiSelect = false;
             this.dgvTasks.Name = "dgvTasks";
             this.dgvTasks.RowHeadersVisible = false;
+            this.dgvTasks.RowTemplate.ContextMenuStrip = this.dgvContextMenu;
             this.dgvTasks.RowTemplate.Height = 25;
             this.dgvTasks.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.dgvTasks.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -165,6 +171,7 @@
             this.dgvTasks.ShowEditingIcon = false;
             this.dgvTasks.Size = new System.Drawing.Size(392, 450);
             this.dgvTasks.TabIndex = 1;
+            this.dgvTasks.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvTasks_CellMouseDown);
             this.dgvTasks.Click += new System.EventHandler(this.dgvTasks_Click);
             this.dgvTasks.DoubleClick += new System.EventHandler(this.dgvTasks_DoubleClick);
             // 
@@ -262,6 +269,44 @@
             this.lblSunday.Text = "Sun";
             this.lblSunday.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // lblAbout
+            // 
+            this.lblAbout.AutoSize = true;
+            this.lblAbout.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAbout.Location = new System.Drawing.Point(976, 17);
+            this.lblAbout.Name = "lblAbout";
+            this.lblAbout.Size = new System.Drawing.Size(64, 20);
+            this.lblAbout.TabIndex = 7;
+            this.lblAbout.TabStop = true;
+            this.lblAbout.Text = "About...";
+            this.lblAbout.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblAbout_LinkClicked);
+            // 
+            // dgvContextMenu
+            // 
+            this.dgvContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.completeTask,
+            this.editTask});
+            this.dgvContextMenu.Name = "dgvContextMenu";
+            this.dgvContextMenu.Size = new System.Drawing.Size(175, 48);
+            this.dgvContextMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.dgvContextMenu_ItemClicked);
+            // 
+            // completeTask
+            // 
+            this.completeTask.Image = global::MyTasks.Properties.Resources.StatusOffline_16x;
+            this.completeTask.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.completeTask.Name = "completeTask";
+            this.completeTask.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+            this.completeTask.Size = new System.Drawing.Size(174, 22);
+            this.completeTask.Text = "Complete task";
+            // 
+            // editTask
+            // 
+            this.editTask.Image = global::MyTasks.Properties.Resources.ASX_Edit_blue_16x;
+            this.editTask.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.editTask.Name = "editTask";
+            this.editTask.Size = new System.Drawing.Size(174, 22);
+            this.editTask.Text = "Edit task";
+            // 
             // btnNewTask
             // 
             this.btnNewTask.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -275,18 +320,6 @@
             this.btnNewTask.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnNewTask.UseVisualStyleBackColor = true;
             this.btnNewTask.Click += new System.EventHandler(this.btnNewTask_Click);
-            // 
-            // lblAbout
-            // 
-            this.lblAbout.AutoSize = true;
-            this.lblAbout.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblAbout.Location = new System.Drawing.Point(976, 17);
-            this.lblAbout.Name = "lblAbout";
-            this.lblAbout.Size = new System.Drawing.Size(64, 20);
-            this.lblAbout.TabIndex = 7;
-            this.lblAbout.TabStop = true;
-            this.lblAbout.Text = "About...";
-            this.lblAbout.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblAbout_LinkClicked);
             // 
             // Main
             // 
@@ -313,6 +346,7 @@
             this.groupTaskList.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvTasks)).EndInit();
             this.groupShortTermPlan.ResumeLayout(false);
+            this.dgvContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -339,6 +373,9 @@
         private System.Windows.Forms.Label lblDueTo;
         private System.Windows.Forms.Label lblDescription;
         private System.Windows.Forms.LinkLabel lblAbout;
+        private System.Windows.Forms.ContextMenuStrip dgvContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem completeTask;
+        private System.Windows.Forms.ToolStripMenuItem editTask;
     }
 }
 

@@ -143,5 +143,11 @@
   <ItemGroup>
     <None Include="Resources\clipboard-icon.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\StatusOffline_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ASX_Edit_blue_16x.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

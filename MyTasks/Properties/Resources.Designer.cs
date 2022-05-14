@@ -73,6 +73,16 @@ namespace MyTasks.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ASX_Edit_blue_16x {
+            get {
+                object obj = ResourceManager.GetObject("ASX_Edit_blue_16x", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Cancel {
             get {
                 object obj = ResourceManager.GetObject("Cancel", resourceCulture);
@@ -126,6 +136,16 @@ namespace MyTasks.Properties {
         internal static System.Drawing.Bitmap Ok {
             get {
                 object obj = ResourceManager.GetObject("Ok", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap StatusOffline_16x {
+            get {
+                object obj = ResourceManager.GetObject("StatusOffline_16x", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
