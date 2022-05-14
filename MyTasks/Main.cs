@@ -171,6 +171,7 @@ namespace MyTasks
             UpdateCalendar(shortTerm, date);
 
             // Dates needed to properly update groupShortTermPlan.Text
+            DateTime firstDate = date;
             DateTime lastDate;
             
             for (int row = 0; row <= 4; row++)
@@ -212,7 +213,7 @@ namespace MyTasks
 
             // Update groupShortTermPlan Text property
             lastDate = shortTerm[6, 4].Date;            
-            groupShortTermPlan.Text = "Short term plan - " + ShortTermPeriod(date, lastDate);
+            groupShortTermPlan.Text = "Short term plan - " + ShortTermPeriod(firstDate, lastDate);
         }
 
         private string ShortTermPeriod(DateTime firstDay, DateTime lastDay)
