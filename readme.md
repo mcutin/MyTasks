@@ -13,4 +13,4 @@ A simple short term to do list. Database is a XML file, since there is no such h
 
 # Known issues
 
-* Need to find a way of avoiding appearing cursor inside richtext boxes and also allowing user to select text inside them.
+* None at this moment.
