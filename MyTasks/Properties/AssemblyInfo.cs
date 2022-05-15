@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("MyTasks")]
-[assembly: AssemblyDescription("A (very) simple to do list manager software. Clipboard icon art by Icojam (https://iconarchive.com/artist/icojam.html). Clipboard icon downloaded from https://iconarchive.com/show/onebit-4-icons-by-icojam/clipboard-icon.html. Clipboard icon is used under Creative Commons Public Domain License (https://creativecommons.org/publicdomain/zero/1.0/).")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("For personal use only")]
 [assembly: AssemblyProduct("MyTasks")]
