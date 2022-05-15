@@ -8,7 +8,7 @@ A simple short term to do list. Database is a XML file, since there is no such h
 
 # To be implemented
 
-* ReNothing for now.
+* Nothing for now.
 
 # Known issues
 
