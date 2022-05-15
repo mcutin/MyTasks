@@ -117,12 +117,12 @@ namespace MyTasks
                         prioImg.Value = null;
                         break;
                 }
-                date.Value = t.DueDate;
+                date.Value = t.DueDate.ToString("dd/MM/yyyy");
                 description.Value = t.Description;
                 id.Value = t.ID;
                 prioNum.Value = t.Priority;
             }
-            HighlightDay(DateTime.ParseExact(dgvTasks.SelectedRows[0].Cells[1].Value.ToString(), "dd/MM/yyyy HH:mm:ss", null));
+            HighlightDay(DateTime.ParseExact(dgvTasks.SelectedRows[0].Cells[1].Value.ToString(), "dd/MM/yyyy", null));
         }
 
         private void UpdateStatusBar()
@@ -209,7 +209,7 @@ namespace MyTasks
                 }
             }
             //DateTime selDate = DateTime.ParseExact(dgvTasks.SelectedRows[0].Cells[1].Value.ToString(), "dd/MM/yyyy HH:mm:ss", null);
-            HighlightDay(DateTime.ParseExact(dgvTasks.SelectedRows[0].Cells[1].Value.ToString(), "dd/MM/yyyy HH:mm:ss", null));
+            HighlightDay(DateTime.ParseExact(dgvTasks.SelectedRows[0].Cells[1].Value.ToString(), "dd/MM/yyyy", null));
 
             // Update groupShortTermPlan Text property
             lastDate = shortTerm[6, 4].Date;            
@@ -343,7 +343,7 @@ namespace MyTasks
 
         private void dgvTasks_Click(object sender, EventArgs e)
         {
-            DateTime selDate = DateTime.ParseExact(dgvTasks.SelectedRows[0].Cells[1].Value.ToString(), "dd/MM/yyyy HH:mm:ss", null);
+            DateTime selDate = DateTime.ParseExact(dgvTasks.SelectedRows[0].Cells[1].Value.ToString(), "dd/MM/yyyy", null);
             HighlightDay(selDate);
         }
 
