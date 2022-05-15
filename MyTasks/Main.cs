@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Input;
 using System.Xml.Linq;
 
 // Project icon downloaded from https://iconarchive.com/show/onebit-4-icons-by-icojam/clipboard-icon.html
@@ -60,7 +61,6 @@ namespace MyTasks
                 Task tempTask = new Task(tempID, tempPriority, tempDate, tempDescription);
                 taskList.Add(tempTask);
             }
-            
             UpdateStatusBar();
             FormatTaskList();
             UpdateTaskList();
@@ -398,12 +398,8 @@ namespace MyTasks
             }
             EditTask editTask = new EditTask(id, description, date, priority, tasks);
             editTask.ShowDialog();
-            tasks.Update();
+            //tasks.Update();
             LoadTasks();
-            UpdateStatusBar();
-            FormatTaskList();
-            UpdateTaskList();
-            UpdateShortTermPlan();
         }
 
         private void HighlightDay(DateTime date)
@@ -444,14 +440,43 @@ namespace MyTasks
             ToolStripItem menuOption = e.ClickedItem;
             if(menuOption.Name == "completeTask")
             {
-                MessageBox.Show("Complete task not implemented yet.", "Information", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //MessageBox.Show("Complete task not implemented yet.", "Information", 
+                //    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                DeleteTask();
             }
             else if(menuOption.Name == "editTask")
             {
                 //message = "Edit task not implemented yet.";
                 EditTask(dgvTasks);
             }
+        }
+
+        private void DeleteTask()
+        {
+            DialogResult userAnswer = MessageBox.Show("Are you sure you want to flag this task completed and remove it?",
+                "Complete task", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if(userAnswer == DialogResult.Yes)
+            {
+                Int32.TryParse(dgvTasks.SelectedRows[0].Cells[3].Value.ToString(), out int selectedID);
+                var tComplete = from t in tasks.Content.Root.Elements("task")
+                                 where Int32.Parse(t.Element("id").Value.ToString()) == selectedID
+                                 select t;
+                foreach (XElement t in tComplete)
+                {
+                    t.Remove();
+                }
+                tasks.Save();
+                LoadTasks();
+            }
+        }
+
+        private void dgvTasks_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                DeleteTask();
+            }
+            return;
         }
     }
 }
