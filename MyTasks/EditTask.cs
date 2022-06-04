@@ -37,7 +37,8 @@ namespace MyTasks
         {
             InitializeComponent();
             taskDescription.Text = description;
-            DateTime date = DateTime.ParseExact(dueDate, "dd/MM/yyyy hh:mm:ss", null);
+            //DateTime date = DateTime.ParseExact(dueDate, "dd/MM/yyyy hh:mm:ss", null);
+            DateTime date = DateTime.ParseExact(dueDate, "dd/MM/yyyy", null);
             taskDueDate.Value = date;
             taskPriority.Text = priority;
             this.AllTasks = tasks;
