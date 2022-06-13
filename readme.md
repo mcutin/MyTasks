@@ -1,6 +1,6 @@
 # About
 
-A simple short term to do list. Database is a XML file, since there is no such huge amount of data.
+A simple short term to do list. Database is a JSON file, since there is no such huge amount of data.
 
 ![Example screenshot](Assets/Example.jpg)
 
