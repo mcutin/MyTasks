@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyTasks
 {
-    internal class Task
+    public class Task
     {
         // Fields
         protected ushort _id; // unsigned 16-bit integer is far more than enough
@@ -14,7 +10,12 @@ namespace MyTasks
         protected DateTime _dueDate;
         protected string _description;
 
-        // Constructor
+        // Constructors
+        public Task()
+        {
+            // Empty constructor exists only to allow JSON deserialization
+        }
+
         public Task(int id, int priority, DateTime date, string desc)
         {
             ID = (ushort)id;
@@ -39,7 +40,11 @@ namespace MyTasks
         public DateTime DueDate
         {
             get { return _dueDate; }
-            set { _dueDate = value; }
+            set 
+            {
+                string tmp = value.ToString("dd/MM/yyyy");
+                _dueDate = DateTime.Parse(tmp);
+            }
         }
 
         public string Description

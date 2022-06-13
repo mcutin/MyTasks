@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Linq;
 
 // Ok button icon downloaded from https://iconarchive.com/show/oxygen-icons-by-oxygen-icons.org/Actions-dialog-ok-apply-icon.html
 // Cancel button icon downloaded from https://iconarchive.com/show/oxygen-icons-by-oxygen-icons.org/Actions-dialog-cancel-icon.html
@@ -17,14 +10,14 @@ namespace MyTasks
     public partial class EditTask : Form
     {
         // Fields
-        protected XMLReader _allTasks;
+        protected TaskList _taskList;
         protected int _taskID;
 
         // Properties
-        public XMLReader AllTasks
+        public TaskList TaskList
         {
-            get { return _allTasks; }
-            set { _allTasks = value; }
+            get { return _taskList; }
+            set { _taskList = value; }
         }
 
         public int TaskID
@@ -33,17 +26,15 @@ namespace MyTasks
             set { _taskID = value; }
         }
 
-        public EditTask(int id, string description, string dueDate, string priority, XMLReader tasks)
+        public EditTask(int id, string description, string dueDate, string priority, TaskList list)
         {
             InitializeComponent();
             taskDescription.Text = description;
-            //DateTime date = DateTime.ParseExact(dueDate, "dd/MM/yyyy hh:mm:ss", null);
             DateTime date = DateTime.ParseExact(dueDate, "dd/MM/yyyy", null);
             taskDueDate.Value = date;
             taskPriority.Text = priority;
-            this.AllTasks = tasks;
-            this.TaskID = id;
-
+            TaskList = list;
+            TaskID = id;
         }
         
         private void btnOk_Click(object sender, EventArgs e)
@@ -63,18 +54,37 @@ namespace MyTasks
                     break;
             }
 
-            var item = from t in this.AllTasks.Content.Descendants("task")
-                       where Int32.Parse(t.Element("id").Value) == this.TaskID
-                       select t;
-            
-            foreach(XElement task in item)
-            {
-                task.SetElementValue("priority", pValue.ToString());
-                task.SetElementValue("dueDate", taskDueDate.Value.ToString("dd/MM/yyyy"));
-                task.SetElementValue("description", taskDescription.Text);
-            }
-            AllTasks.Save();
+            Task itemToEdit = TaskList.ListOfTasks.Single<Task>(r => r.ID == TaskID);
+
+            itemToEdit.Priority = (byte)pValue;
+            itemToEdit.DueDate = DateTime.Parse(taskDueDate.Value.ToString());
+            itemToEdit.Description = taskDescription.Text;
+
+            TaskList.Save();
             this.Close();
+        }
+
+        private void EnableOkButton()
+        {
+            // Check if condition for Ok button to be enabled is met
+            if (string.IsNullOrEmpty(taskDescription.Text))
+            {
+                this.btnOk.Enabled = false;
+            }
+            else
+            {
+                this.btnOk.Enabled = true;
+            }
+        }
+
+        private void taskDescription_TextChanged(object sender, EventArgs e)
+        {
+            EnableOkButton();
+        }
+
+        private void taskDescription_Leave(object sender, EventArgs e)
+        {
+            EnableOkButton();
         }
     }
 }

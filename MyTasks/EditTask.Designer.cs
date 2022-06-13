@@ -56,6 +56,8 @@
             this.taskDescription.Name = "taskDescription";
             this.taskDescription.Size = new System.Drawing.Size(385, 26);
             this.taskDescription.TabIndex = 1;
+            this.taskDescription.TextChanged += new System.EventHandler(this.taskDescription_TextChanged);
+            this.taskDescription.Leave += new System.EventHandler(this.taskDescription_Leave);
             // 
             // lblDueDate
             // 
