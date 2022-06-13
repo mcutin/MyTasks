@@ -17,7 +17,7 @@ A simple short term to do list. Database is a JSON file, since there is no such 
 * Added automatic build/revision number.
 * Added hyperlink to [my GitHub](https://github.com/mcutin) site in About box.
 * No more XML file to store tasks. JSON is much easier to handle.
-* Array out of range runtime exception bug corrected.
+* Array index out of range runtime exception bug corrected.
 
 ## 1.0.2.0
 
