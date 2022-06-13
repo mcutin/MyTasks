@@ -8,9 +8,16 @@ A simple short term to do list. Database is a XML file, since there is no such h
 
 # Latest stable version
 
-1.0.2.0
+1.1, build 8198.39209
 
 # Change history
+
+## 1.1, build 8198.39209
+
+* Added automatic build/revision number.
+* Added hyperlink to [my GitHub](https://github.com/mcutin) site in About box.
+* No more XML file to store tasks. JSON is much easier to handle.
+* Array out of range runtime exception bug corrected.
 
 ## 1.0.2.0
 

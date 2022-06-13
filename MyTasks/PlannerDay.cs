@@ -14,7 +14,6 @@ namespace MyTasks
         protected int _normal;
         protected int _high;
         protected bool _highlight = false;
-        //protected bool _enabled = true;
 
         // Properties
 
@@ -124,31 +123,6 @@ namespace MyTasks
             }
         }
 
-        //public bool Enabled
-        //{
-        //    get { return _enabled; }
-        //    set
-        //    {
-        //        _enabled = value;
-        //        if (_enabled)
-        //        {
-        //            this.Visible = true;
-        //        }
-        //        else
-        //        {
-        //            //lblDay.Text = String.Empty;
-        //            //lblDay.BackColor = SystemColors.Control;
-        //            //lblHigh.Text = String.Empty;
-        //            //lblHigh.BackColor = SystemColors.Control;
-        //            //lblNormal.Text = String.Empty;
-        //            //lblNormal.BackColor = SystemColors.Control;
-        //            //lblLow.Text = String.Empty;
-        //            //lblLow.BackColor = SystemColors.Control;
-        //            this.Visible = false;
-        //        }
-                
-        //    }
-        //}
         public PlannerDay()
         {
             InitializeComponent();

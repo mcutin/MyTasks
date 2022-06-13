@@ -16,7 +16,7 @@ namespace MyTasks
             InitializeComponent();
             this.Text = String.Format("About {0}", AssemblyTitle);
             this.labelProductName.Text = AssemblyProduct;
-            this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
+            this.labelVersion.Text = String.Format("Version {0}, build {1}", AssemblyVersion, AssemblyBuild);
             this.labelCopyright.Text = AssemblyCopyright;
             this.labelCompanyName.Text = AssemblyCompany;
             //this.textBoxDescription.Text = AssemblyDescription;
@@ -51,7 +51,21 @@ namespace MyTasks
         {
             get
             {
-                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                string majorMinor = Assembly.GetExecutingAssembly().GetName().Version.Major.ToString() +
+                    "." + Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString();
+                return majorMinor;
+                //return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                
+            }
+        }
+
+        public string AssemblyBuild
+        {
+            get
+            {
+                string build = Assembly.GetExecutingAssembly().GetName().Version.Build.ToString() +
+                    "." + Assembly.GetExecutingAssembly().GetName().Version.Revision.ToString();
+                return build;
             }
         }
 
@@ -107,5 +121,18 @@ namespace MyTasks
             }
         }
         #endregion
+
+        private void lblGitHubLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start("https://github.com/mcutin");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Could not visit github.com/mcutin. Check your internet connection.",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

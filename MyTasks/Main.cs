@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Input;
-using System.Xml.Linq;
 
 // Project icon downloaded from https://iconarchive.com/show/onebit-4-icons-by-icojam/clipboard-icon.html
 // Icon for New Task button downloaded from collection https://iconarchive.com/show/snowish-icons-by-saki.3.html
@@ -19,8 +13,8 @@ namespace MyTasks
 {
     public partial class Main : Form
     {
-        public XMLReader tasks = new XMLReader("tasks.xml");
-        List<Task> taskList = new List<Task>();
+        static string fileName = "MyTasks.json";
+        TaskList allTasks = new TaskList(fileName);
         PlannerDay[,] shortTerm = new PlannerDay[7, 5];
 
         // Constructor
@@ -28,44 +22,56 @@ namespace MyTasks
         {
             InitializeComponent();
             
-            // Initilalize short plan array
-            for (int col = 0; col < 7; col++)
+            // Add all PlannerDay objects to shortTerm array
+            shortTerm[0, 0] = PDay00;
+            shortTerm[1, 0] = PDay10;
+            shortTerm[2, 0] = PDay20;
+            shortTerm[3, 0] = PDay30;
+            shortTerm[4, 0] = PDay40;
+            shortTerm[5, 0] = PDay50;
+            shortTerm[6, 0] = PDay60;
+            shortTerm[0, 1] = PDay01;
+            shortTerm[1, 1] = PDay11;
+            shortTerm[2, 1] = PDay21;
+            shortTerm[3, 1] = PDay31;
+            shortTerm[4, 1] = PDay41;
+            shortTerm[5, 1] = PDay51;
+            shortTerm[6, 1] = PDay61;
+            shortTerm[0, 2] = PDay02;
+            shortTerm[1, 2] = PDay12;
+            shortTerm[2, 2] = PDay22;
+            shortTerm[3, 2] = PDay32;
+            shortTerm[4, 2] = PDay42;
+            shortTerm[5, 2] = PDay52;
+            shortTerm[6, 2] = PDay62;
+            shortTerm[0, 3] = PDay03;
+            shortTerm[1, 3] = PDay13;
+            shortTerm[2, 3] = PDay23;
+            shortTerm[3, 3] = PDay33;
+            shortTerm[4, 3] = PDay43;
+            shortTerm[5, 3] = PDay53;
+            shortTerm[6, 3] = PDay63;
+            shortTerm[0, 4] = PDay04;
+            shortTerm[1, 4] = PDay14;
+            shortTerm[2, 4] = PDay24;
+            shortTerm[3, 4] = PDay34;
+            shortTerm[4, 4] = PDay44;
+            shortTerm[5, 4] = PDay54;
+            shortTerm[6, 4] = PDay64;
+
+            // If JSON file does not exist, adds a new general task
+            if (!File.Exists(fileName))
             {
-                for (int row = 0; row < 5; row++)
-                {
-                    // Instatiates all necessary PlannerDay objects
-                    shortTerm[col, row] = new PlannerDay();
-                    // Add each object to groupShortTermPlan
-                    groupShortTermPlan.Controls.Add(shortTerm[col, row]);
-                    // Define each object location inside groupShortTermPlan
-                    shortTerm[col, row].Location = new Point(15 + col * shortTerm[col, row].Width,
-                                                         65 + row * shortTerm[col, row].Height);
-                }
+                Task t = new Task(1, 1, DateTime.Now, "My first task.");
+                allTasks.ListOfTasks = new List<Task>() { t };
+            }
+            else
+            {
+                allTasks.Load();
             }
         }
 
         // Methods
-        public void LoadTasks()
-        {
-            taskList.Clear();
-            tasks.Open();
-
-            // Populate taskList with tasks loaded from XML file
-            IEnumerable<XElement> allTasks = from t in tasks.Content.Descendants("task") select t;
-            foreach (XElement task in allTasks)
-            {
-                Int32.TryParse(task.Element("id").Value, out int tempID);
-                Int32.TryParse(task.Element("priority").Value, out int tempPriority);
-                DateTime tempDate = DateTime.ParseExact(task.Element("dueDate").Value, "dd/MM/yyyy", null);
-                string tempDescription = task.Element("description").Value;
-                Task tempTask = new Task(tempID, tempPriority, tempDate, tempDescription);
-                taskList.Add(tempTask);
-            }
-            UpdateStatusBar();
-            FormatTaskList();
-            UpdateTaskList();
-            UpdateShortTermPlan();
-        }
 
         private void FormatTaskList()
         {
@@ -87,8 +93,8 @@ namespace MyTasks
         private void UpdateTaskList()
         {
             // Check order
-            var orderedList = radioDueDate.Checked ? taskList.OrderBy(t => t.DueDate).ThenByDescending(t => t.Priority) :
-                    taskList.OrderByDescending(t => t.Priority).ThenBy(t => t.DueDate);
+            var orderedList = radioDueDate.Checked ? allTasks.ListOfTasks.OrderBy(t => t.DueDate).ThenByDescending(t => t.Priority) :
+                    allTasks.ListOfTasks.OrderByDescending(t => t.Priority).ThenBy(t => t.DueDate);
             
             // Clear datagridview
             dgvTasks.Rows.Clear();
@@ -122,6 +128,7 @@ namespace MyTasks
                 id.Value = t.ID;
                 prioNum.Value = t.Priority;
             }
+            dgvTasks.Rows[0].Selected = true;
             HighlightDay(DateTime.ParseExact(dgvTasks.SelectedRows[0].Cells[1].Value.ToString(), "dd/MM/yyyy", null));
         }
 
@@ -130,7 +137,7 @@ namespace MyTasks
             int lowP = 0;
             int normalP = 0;
             int highP = 0;
-            foreach(Task t in taskList)
+            foreach(Task t in allTasks.ListOfTasks)
             {
                 switch (t.Priority)
                 {
@@ -147,7 +154,7 @@ namespace MyTasks
                         break;
                 }
             }
-            statusBarLabel.Text = taskList.Count().ToString() + " tasks listed - Priority: " +
+            statusBarLabel.Text = allTasks.ListOfTasks.Count().ToString() + " tasks listed - Priority: " +
                 lowP.ToString() + " low, " + normalP.ToString() + " normal, " + highP.ToString() + " high";
         }
 
@@ -159,24 +166,24 @@ namespace MyTasks
             // Fill in all the data for each Day in short term plan
 
             // Returns the oldest task date
-            DateTime date = DateTime.MaxValue;
-            foreach (Task t in taskList)
+            DateTime firstDate = DateTime.MaxValue;
+            foreach (Task t in allTasks.ListOfTasks)
             {
-                if (date > t.DueDate)
+                if (firstDate > t.DueDate)
                 {
-                    date = t.DueDate;
+                    firstDate = t.DueDate;
                 }
             }
 
-            UpdateCalendar(shortTerm, date);
+            UpdateCalendar(shortTerm, firstDate);
 
             // Dates needed to properly update groupShortTermPlan.Text
-            DateTime firstDate = date;
+            DateTime date = firstDate;
             DateTime lastDate;
             
-            for (int row = 0; row <= 4; row++)
+            for (int row = 0; row < 5; row++)
             {
-                for (int col = 0; col <= 6; col++)
+                for (int col = 0; col < 7; col++)
                 {
                     if (shortTerm[col, row].Visible)
                     {
@@ -185,22 +192,25 @@ namespace MyTasks
 
                         // Fill in tasks per priority
                         // Low
-                        IEnumerable<Task> lp = from t in taskList
+                        IEnumerable<Task> lp = from t in allTasks.ListOfTasks
                                                    where t.Priority == 0 && t.DueDate == date
                                                    select t;
 
+                        foreach(Task t in lp) { }
                         shortTerm[col, row].Low = lp.Count();
                         // Normal
-                        IEnumerable<Task> np = from t in taskList
+                        IEnumerable<Task> np = from t in allTasks.ListOfTasks
                                                    where t.Priority == 1 && t.DueDate == date
                                                    select t;
 
+                        foreach(Task t in np) { }
                         shortTerm[col, row].Normal = np.Count();
                         // High
-                        IEnumerable<Task> hp = from t in taskList
+                        IEnumerable<Task> hp = from t in allTasks.ListOfTasks
                                                    where t.Priority == 2 && t.DueDate == date
                                                    select t;
 
+                        foreach(Task t in hp) { }
                         shortTerm[col, row].High = hp.Count();
 
                         // Increment date
@@ -208,7 +218,6 @@ namespace MyTasks
                     }
                 }
             }
-            //DateTime selDate = DateTime.ParseExact(dgvTasks.SelectedRows[0].Cells[1].Value.ToString(), "dd/MM/yyyy HH:mm:ss", null);
             HighlightDay(DateTime.ParseExact(dgvTasks.SelectedRows[0].Cells[1].Value.ToString(), "dd/MM/yyyy", null));
 
             // Update groupShortTermPlan Text property
@@ -248,67 +257,67 @@ namespace MyTasks
             switch (dow)
             {
                 case DayOfWeek.Monday:
-                    shortTerm[0, 0].Visible = false;
-                    shortTerm[0, 1].Visible = true;
-                    shortTerm[0, 2].Visible = true;
-                    shortTerm[0, 3].Visible = true;
-                    shortTerm[0, 4].Visible = true;
-                    shortTerm[0, 5].Visible = true;
-                    shortTerm[0, 6].Visible = true;
+                    PDay00.Visible = false;
+                    PDay10.Visible = true;
+                    PDay20.Visible = true;
+                    PDay30.Visible = true;
+                    PDay40.Visible = true;
+                    PDay50.Visible = true;
+                    PDay60.Visible = true;
                     break;
                 case DayOfWeek.Tuesday:
-                    shortTerm[0, 0].Visible = false;
-                    shortTerm[1, 0].Visible = false;
-                    shortTerm[2, 0].Visible = true;
-                    shortTerm[3, 0].Visible = true;
-                    shortTerm[4, 0].Visible = true;
-                    shortTerm[5, 0].Visible = true;
-                    shortTerm[6, 0].Visible = true;
+                    PDay00.Visible = false;
+                    PDay10.Visible = false;
+                    PDay20.Visible = true;
+                    PDay30.Visible = true;
+                    PDay40.Visible = true;
+                    PDay50.Visible = true;
+                    PDay60.Visible = true;
                     break;
                 case DayOfWeek.Wednesday:
-                    shortTerm[0, 0].Visible = false;
-                    shortTerm[1, 0].Visible = false;
-                    shortTerm[2, 0].Visible = false;
-                    shortTerm[3, 0].Visible = true;
-                    shortTerm[4, 0].Visible = true;
-                    shortTerm[5, 0].Visible = true;
-                    shortTerm[6, 0].Visible = true;
+                    PDay00.Visible = false;
+                    PDay10.Visible = false;
+                    PDay20.Visible = false;
+                    PDay30.Visible = true;
+                    PDay40.Visible = true;
+                    PDay50.Visible = true;
+                    PDay60.Visible = true;
                     break;
                 case DayOfWeek.Thursday:
-                    shortTerm[0, 0].Visible = false;
-                    shortTerm[1, 0].Visible = false;
-                    shortTerm[2, 0].Visible = false;
-                    shortTerm[3, 0].Visible = false;
-                    shortTerm[4, 0].Visible = true;
-                    shortTerm[5, 0].Visible = true;
-                    shortTerm[6, 0].Visible = true;
+                    PDay00.Visible = false;
+                    PDay10.Visible = false;
+                    PDay20.Visible = false;
+                    PDay30.Visible = false;
+                    PDay40.Visible = true;
+                    PDay50.Visible = true;
+                    PDay60.Visible = true;
                     break;
                 case DayOfWeek.Friday:
-                    shortTerm[0, 0].Visible = false;
-                    shortTerm[1, 0].Visible = false;
-                    shortTerm[2, 0].Visible = false;
-                    shortTerm[3, 0].Visible = false;
-                    shortTerm[4, 0].Visible = false;
-                    shortTerm[5, 0].Visible = true;
-                    shortTerm[6, 0].Visible = true;
+                    PDay00.Visible = false;
+                    PDay10.Visible = false;
+                    PDay20.Visible = false;
+                    PDay30.Visible = false;
+                    PDay40.Visible = false;
+                    PDay50.Visible = true;
+                    PDay60.Visible = true;
                     break;
                 case DayOfWeek.Saturday:
-                    shortTerm[0, 0].Visible = false;
-                    shortTerm[1, 0].Visible = false;
-                    shortTerm[2, 0].Visible = false;
-                    shortTerm[3, 0].Visible = false;
-                    shortTerm[4, 0].Visible = false;
-                    shortTerm[5, 0].Visible = false;
-                    shortTerm[6, 0].Visible = true;
+                    PDay00.Visible = false;
+                    PDay10.Visible = false;
+                    PDay20.Visible = false;
+                    PDay30.Visible = false;
+                    PDay40.Visible = false;
+                    PDay50.Visible = false;
+                    PDay60.Visible = true;
                     break;
                 default:
-                    shortTerm[0, 0].Visible = true;
-                    shortTerm[1, 0].Visible = true;
-                    shortTerm[2, 0].Visible = true;
-                    shortTerm[3, 0].Visible = true;
-                    shortTerm[4, 0].Visible = true;
-                    shortTerm[5, 0].Visible = true;
-                    shortTerm[6, 0].Visible = true;
+                    PDay00.Visible = true;
+                    PDay10.Visible = true;
+                    PDay20.Visible = true;
+                    PDay30.Visible = true;
+                    PDay40.Visible = true;
+                    PDay50.Visible = true;
+                    PDay60.Visible = true;
                     break;
             }
         }
@@ -324,21 +333,25 @@ namespace MyTasks
             }
         }
 
-        private void btnNewTask_Click(object sender, EventArgs e)
+        private void UpdateAll()
         {
-            NewTask newTask = new NewTask();
-            newTask.ShowDialog();
-            tasks.Update();
-            LoadTasks();
             UpdateStatusBar();
             FormatTaskList();
             UpdateTaskList();
             UpdateShortTermPlan();
         }
 
+        private void btnNewTask_Click(object sender, EventArgs e)
+        {
+            NewTask newTask = new NewTask(allTasks);
+            newTask.ShowDialog();
+            allTasks.Load();
+            UpdateAll();
+        }
+
         private void Main_Load(object sender, EventArgs e)
         {
-            LoadTasks();
+            UpdateAll();
         }
 
         private void dgvTasks_Click(object sender, EventArgs e)
@@ -396,10 +409,10 @@ namespace MyTasks
                     priority = "Low";
                     break;
             }
-            EditTask editTask = new EditTask(id, description, date, priority, tasks);
+            EditTask editTask = new EditTask(id, description, date, priority, allTasks);
             editTask.ShowDialog();
-            //tasks.Update();
-            LoadTasks();
+            allTasks.Load();
+            UpdateAll();
         }
 
         private void HighlightDay(DateTime date)
@@ -440,13 +453,10 @@ namespace MyTasks
             ToolStripItem menuOption = e.ClickedItem;
             if(menuOption.Name == "completeTask")
             {
-                //MessageBox.Show("Complete task not implemented yet.", "Information", 
-                //    MessageBoxButtons.OK, MessageBoxIcon.Information);
                 DeleteTask();
             }
-            else if(menuOption.Name == "editTask")
+            else if(menuOption.Name == "editTaskTSMenu")
             {
-                //message = "Edit task not implemented yet.";
                 EditTask(dgvTasks);
             }
         }
@@ -458,15 +468,11 @@ namespace MyTasks
             if(userAnswer == DialogResult.Yes)
             {
                 Int32.TryParse(dgvTasks.SelectedRows[0].Cells[3].Value.ToString(), out int selectedID);
-                var tComplete = from t in tasks.Content.Root.Elements("task")
-                                 where Int32.Parse(t.Element("id").Value.ToString()) == selectedID
-                                 select t;
-                foreach (XElement t in tComplete)
-                {
-                    t.Remove();
-                }
-                tasks.Save();
-                LoadTasks();
+                Task itemToRemove = allTasks.ListOfTasks.Single<Task>(r => r.ID == selectedID);
+                allTasks.ListOfTasks.Remove(itemToRemove);
+                allTasks.Save();
+                allTasks.Load();
+                UpdateAll();
             }
         }
 

@@ -16,9 +16,24 @@ namespace MyTasks
 {
     public partial class NewTask : Form
     {
+        private TaskList _taskList;
+
+        public TaskList TaskList
+        {
+            get { return _taskList; }
+            set { _taskList = value; }
+        }
+
+        // Constructors
         public NewTask()
         {
             InitializeComponent();
+        }
+
+        public NewTask(TaskList list)
+        {
+            InitializeComponent();
+            TaskList = list;
         }
 
         private void NewTask_Load(object sender, EventArgs e)
@@ -52,11 +67,9 @@ namespace MyTasks
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            // Saves new task to XML file
-
-            XMLReader taskDB = new XMLReader("tasks.xml");
-            taskDB.Open();
-            int newID = taskDB.FirstFreeID();
+            // Saves new task
+            
+            int newID = TaskList.FirstFreeID();
             int newPriority = 1; // Default priority is Normal
             if (taskPriority.Text == "Low")
             {
@@ -66,12 +79,13 @@ namespace MyTasks
             {
                 newPriority = 2;
             }
-            taskDB.Content.Root.Add(new XElement("task", 
-                new XElement("id", newID.ToString()),
-                new XElement("priority", newPriority.ToString()),
-                new XElement("dueDate", taskDueDate.Value.ToString("dd/MM/yyyy")),
-                new XElement("description", taskDescription.Text)));
-            taskDB.Save();
+
+            TaskList.ListOfTasks.Add(new Task(newID, newPriority, 
+                DateTime.Parse(taskDueDate.Value.ToString("dd/MM/yyyy")),
+                taskDescription.Text));
+
+            TaskList.Save();
+            this.Close();
         }
     }
 }

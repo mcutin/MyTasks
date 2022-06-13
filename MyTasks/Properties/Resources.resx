@@ -127,14 +127,17 @@
   <data name="StatusOffline_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\StatusOffline_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Cancel" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Actions-dialog-cancel-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="ASX_Edit_blue_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ASX_Edit_blue_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Normal_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Ok" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Actions-dialog-ok-apply-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Normal_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Cancel" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Actions-dialog-cancel-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="clipboard-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\clipboard-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -142,7 +145,7 @@
   <data name="AddIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Orb-plus-icon_16px.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ASX_Edit_blue_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ASX_Edit_blue_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="GitHub-Mark-32px" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\GitHub-Mark-32px.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
